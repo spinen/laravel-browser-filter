@@ -1,5 +1,5 @@
 {
-    "name": "spinen/laravel-browser-hawk-middleware",
+    "name": "spinen/laravel-browser-filter",
     "description": "Filters request based on browser type.",
     "keywords": [
         "browser hawk",

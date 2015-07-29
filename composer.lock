@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d5c3cb2d315ab20266051e24cad4b230",
+    "hash": "a022c5c319ea519b4bd86e5bc84610c5",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -130,6 +130,144 @@
             "time": "2014-12-20 21:24:13"
         },
         {
+            "name": "garetjax/phpbrowscap",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GaretJax/phpbrowscap.git",
+                "reference": "ed661716d0d9158bac6ab3b074b18b70f8d18bef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GaretJax/phpbrowscap/zipball/ed661716d0d9158bac6ab3b074b18b70f8d18bef",
+                "reference": "ed661716d0d9158bac6ab3b074b18b70f8d18bef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "phpbrowscap": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT License"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Stoppani",
+                    "email": "jonathan.stoppani@gmail.com"
+                }
+            ],
+            "description": "Standalone replacement for php's native get_browser() function",
+            "homepage": "http://github.com/GaretJax/phpbrowscap",
+            "keywords": [
+                "browser",
+                "capabilities",
+                "get_browser",
+                "user agent"
+            ],
+            "time": "2014-02-04 09:18:51"
+        },
+        {
+            "name": "hisorange/browser-detect",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hisorange/browser-detect.git",
+                "reference": "354505904cf4f948a49cc4468ab1a2a0f78ac0f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hisorange/browser-detect/zipball/354505904cf4f948a49cc4468ab1a2a0f78ac0f9",
+                "reference": "354505904cf4f948a49cc4468ab1a2a0f78ac0f9",
+                "shasum": ""
+            },
+            "require": {
+                "garetjax/phpbrowscap": "2.*",
+                "hisorange/traits": "1.*",
+                "illuminate/support": "~5.0",
+                "mobiledetect/mobiledetectlib": "2.*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "hisorange\\BrowserDetect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Zsolt (hisorange)",
+                    "email": "hisoranger@gmail.com"
+                }
+            ],
+            "description": "Browser & Mobile detection package for Laravel 4-5.",
+            "keywords": [
+                "browser",
+                "greenball",
+                "hisorange",
+                "laravel",
+                "mobile",
+                "tablet",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2015-04-22 20:33:37"
+        },
+        {
+            "name": "hisorange/traits",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hisorange/traits.git",
+                "reference": "465baf32faaf155b867dcc11218621e23ef4cac2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hisorange/traits/zipball/465baf32faaf155b867dcc11218621e23ef4cac2",
+                "reference": "465baf32faaf155b867dcc11218621e23ef4cac2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "hisorange\\Traits\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Varga Zsolt (hisorange)",
+                    "email": "hisoranger@gmail.com"
+                }
+            ],
+            "description": "Useful PHP traits.",
+            "keywords": [
+                "php",
+                "traits"
+            ],
+            "time": "2014-05-01 21:28:53"
+        },
+        {
             "name": "illuminate/contracts",
             "version": "v5.1.8",
             "source": {
@@ -223,6 +361,60 @@
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
             "time": "2015-07-20 16:31:36"
+        },
+        {
+            "name": "mobiledetect/mobiledetectlib",
+            "version": "2.8.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serbanghita/Mobile-Detect.git",
+                "reference": "6495567afe1486353bec82d6b2de6f98553d60a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/6495567afe1486353bec82d6b2de6f98553d60a5",
+                "reference": "6495567afe1486353bec82d6b2de6f98553d60a5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "johnkary/phpunit-speedtrap": "~1.0@dev",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Mobile_Detect.php"
+                ],
+                "psr-0": {
+                    "Detection": "namespaced/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Serban Ghita",
+                    "email": "serbanghita@gmail.com",
+                    "homepage": "http://mobiledetect.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+            "homepage": "https://github.com/serbanghita/Mobile-Detect",
+            "keywords": [
+                "detect mobile devices",
+                "mobile",
+                "mobile detect",
+                "mobile detector",
+                "php mobile detect"
+            ],
+            "time": "2015-06-18 09:43:23"
         }
     ],
     "packages-dev": [

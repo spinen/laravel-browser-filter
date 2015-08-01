@@ -4,8 +4,20 @@ namespace Spinen\BrowserFilter;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class FilterServiceProvider
+ *
+ * @package Spinen\BrowserFilter
+ */
 class FilterServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
     /**
      * Perform post-registration booting of services.
      *
@@ -29,6 +41,6 @@ class FilterServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+       //
     }
 }

@@ -47,7 +47,7 @@ Register the HTTP Middleware in file `app/Http/Kernel.php`:
 ```php
     protected $middleware = [
         // ..
-        Spinen\BrowserFilter\Filter::class,
+        \Spinen\BrowserFilter\Filter::class,
 ```
 
 Then edit `config/browserfilter.php` with correct versions of broswers.

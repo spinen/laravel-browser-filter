@@ -1,4 +1,4 @@
-# SPINEN's base Laravel install
+# SPINEN's Laravel Browser Filter
 
 This is a Laravel 5 middleware to filter routes based on browser types.
 

@@ -6,19 +6,24 @@ use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 
+/**
+ * Class Filter
+ *
+ * @package Spinen\BrowserFilter
+ */
 class Filter
 {
     /**
      * The config repository instance.
      *
-     * @var Config
+     * @var Configs
      */
     protected $config;
 
     /**
      * Create a new browser filter middleware instance.
      *
-     * @param Config $config
+     * @param Config $config Config
      */
     public function __construct(Config $config)
     {
@@ -28,8 +33,8 @@ class Filter
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param Request $request Request
+     * @param Closure $next    Closure
      *
      * @return mixed
      */

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Browser Filter" default="build" basedir=".">
+
+    <property name="project_domain_directory" value="src"/>
+    <property name="project_type" value="package"/>
+    <property file="vendor/spinen/build_common/lib/default.properties"/>
+
+    <import file="vendor/spinen/build_common/lib/composer.xml"/>
+    <import file="vendor/spinen/build_common/lib/qa.xml"/>
+    <import file="vendor/spinen/build_common/lib/testing.xml"/>
+
+    <target name="build"
+            depends="qa.lint,phpcs,phpmd,phpunit"/>
+</project>

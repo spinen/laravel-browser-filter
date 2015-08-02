@@ -12,21 +12,4 @@
 
     <target name="build"
             depends="qa.lint,phpcs,phpmd,phpunit"/>
-
-    <!-- Temporary until issue #24 is solved in build_common -->
-    <!--<target name="lint" description="Perform syntax check of source code files">
-        <echo>Running lint syntax checking</echo>
-        <apply executable="php" failonerror="true">
-            <arg value="-l"/>
-            <fileset dir="${basedir}">
-                <include name="**/*.php"/>
-                <exclude name="app/config/packages/**"/>
-                <exclude name="**/*.blade.php"/>
-                <exclude name="_ide_helper.php"/>
-                <exclude name=".idea/**"/>
-                <exclude name="**/vendor/**"/>
-                <modified/>
-            </fileset>
-        </apply>
-    </target>-->
 </project>

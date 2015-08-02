@@ -1,5 +1,5 @@
 {
-  "name": "laravel-browser-hawk-middleware",
+  "name": "laravel-browser-filter",
   "version": "0.0.1",
   "description": "Filters request based on browser type",
   "main": "gulpfile.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "gitlab@git.spinen.net:libraries/laravel-browser-hawk-middleware.git"
+    "url": "gitlab@git.spinen.net:libraries/laravel-browser-filter.git"
   },
   "keywords": [
     "browser hawk",

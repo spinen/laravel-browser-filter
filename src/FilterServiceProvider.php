@@ -12,13 +12,6 @@ use Illuminate\Support\ServiceProvider;
 class FilterServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var boolean
-     */
-    protected $defer = true;
-
-    /**
      * Perform post-registration booting of services.
      *
      * @return void

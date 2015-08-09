@@ -49,7 +49,6 @@ class Filter
     {
         $this->config = $config;
         $this->detector = $detector;
-        // TODO: Look into way to not call statically & inject it
         $this->client = Parser::create()
                               ->parse($this->detector->getUserAgent());
     }

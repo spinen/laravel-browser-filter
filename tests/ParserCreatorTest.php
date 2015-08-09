@@ -30,7 +30,7 @@ class ParserCreatorTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_a_clinent_after_parsing_agent()
+    public function it_returns_a_client_after_parsing_agent()
     {
         $this->assertInstanceOf(Client::class, $this->parser->parseAgent('SomeAgent'));
     }

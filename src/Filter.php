@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Mobile_Detect;
-use UAParser\Parser;
 
 /**
  * Class Filter
@@ -44,13 +43,13 @@ class Filter
      *
      * @param Config        $config   Config
      * @param Mobile_Detect $detector Mobile_Detect
+     * @param ParserCreator $parser   ParserCreator
      */
-    public function __construct(Config $config, Mobile_Detect $detector)
+    public function __construct(Config $config, Mobile_Detect $detector, ParserCreator $parser)
     {
         $this->config = $config;
         $this->detector = $detector;
-        $this->client = Parser::create()
-                              ->parse($this->detector->getUserAgent());
+        $this->client = $parser->parseAgent($this->detector->getUserAgent());
     }
 
     /**

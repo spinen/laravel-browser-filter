@@ -5,6 +5,7 @@ namespace Spinen\BrowserFilter;
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Mobile_Detect;
 
 /**
@@ -39,17 +40,24 @@ class Filter
     private $detector;
 
     /**
+     * @var Redirector
+     */
+    private $redirector;
+
+    /**
      * Create a new browser filter middleware instance.
      *
-     * @param Config        $config   Config
-     * @param Mobile_Detect $detector Mobile_Detect
-     * @param ParserCreator $parser   ParserCreator
+     * @param Config        $config     Config
+     * @param Mobile_Detect $detector   Mobile_Detect
+     * @param ParserCreator $parser     ParserCreator
+     * @param Redirector    $redirector Redirector
      */
-    public function __construct(Config $config, Mobile_Detect $detector, ParserCreator $parser)
+    public function __construct(Config $config, Mobile_Detect $detector, ParserCreator $parser, Redirector $redirector)
     {
         $this->config = $config;
         $this->detector = $detector;
         $this->client = $parser->parseAgent($this->detector->getUserAgent());
+        $this->redirector = $redirector;
     }
 
     /**
@@ -84,8 +92,7 @@ class Filter
     {
         // TODO: Wrap this with the cache repository
         if ($this->isBlocked()) {
-            dd("Denied");
-            // TODO: Return proper view here that is configurable
+            return $this->redirector->route($this->config->get($this->config_path . 'route'));
         }
 
         return $next($request);
@@ -98,7 +105,7 @@ class Filter
      */
     private function isBlocked()
     {
-        return ($this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion());
+        return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
     }
 
     /**

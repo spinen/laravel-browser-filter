@@ -34,14 +34,17 @@
     <filter>
         <whitelist>
             <directory suffix=".php">src/</directory>
-            <!--<exclude>
-                <file>./file.php</file>
-            </exclude>-->
+            <exclude>
+                <!--<file>src/file.php</file>-->
+                <directory suffix=".php">src/config</directory>
+            </exclude>
         </whitelist>
     </filter>
+
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
     </listeners>
+
     <logging>
         <log type="coverage-html"
              target="./build/coverage"

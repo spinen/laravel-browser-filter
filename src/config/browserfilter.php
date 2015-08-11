@@ -40,11 +40,22 @@ return [
     |     * All mobile devices
     |     * All versions of IE that is not on a tablet
     |     * Any version of Opera less than 6 on a tablet
+    |
     */
     'blocked' => [
         'Mobile' => [],
         'Other'  => [],
         'Tablet' => [],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Blocked devices, browsers and/or versions
+    |--------------------------------------------------------------------------
+    |
+    | The name of the route to redirect to the user to if the browser is blocked
+    |
+    */
+    'route' => 'incompatible_browser',
 
 ];

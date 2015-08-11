@@ -3,6 +3,7 @@
 namespace Tests\Spinen\BrowserFilter;
 
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
@@ -58,6 +59,11 @@ class FilterTest extends TestCase
     /**
      * @var Mockery\Mock
      */
+    protected $redirect_response_mock;
+
+    /**
+     * @var Mockery\Mock
+     */
     protected $redirector_mock;
 
     /**
@@ -90,9 +96,6 @@ class FilterTest extends TestCase
         $this->client_device_mock = Mockery::mock(Device::class);
 
         $this->client_ua_mock = Mockery::mock(UserAgent::class);
-        $this->client_ua_mock->shouldReceive('toVersion')
-                             ->withNoArgs()
-                             ->andReturn('a.b.c');
 
         $this->client_mock = Mockery::mock(Client::class);
         $this->client_mock->device = $this->client_device_mock;
@@ -107,33 +110,8 @@ class FilterTest extends TestCase
         $this->request_mock = Mockery::mock(Request::class);
 
         $this->redirector_mock = Mockery::mock(Redirector::class);
-    }
 
-    private function setUpConfigs($device, $ua, $device_config, $ua_config, $blocked)
-    {
-        $this->client_device_mock->family = $device;
-        $this->client_ua_mock->family = $ua;
-
-        $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.blocked.' . $device)
-                          ->andReturn($device_config);
-
-        $this->config_mock->shouldReceive('get')//                          ->once()
-                          ->with('browserfilter.blocked.' . $device . '.' . $ua)
-                          ->andReturn($ua_config);
-
-        if ($blocked) {
-            $this->config_mock->shouldReceive('get')
-                              ->once()
-                              ->with('browserfilter.blocked.route')
-                              ->andReturn('route');
-
-            $this->redirector_mock->shouldReceive('route')
-                                  ->once()
-                                  ->with('route')
-                                  ->andReturn($this->request_mock);
-        }
+        $this->redirect_response_mock = Mockery::mock(RedirectResponse::class);
     }
 
     private function returnGiven()
@@ -156,9 +134,43 @@ class FilterTest extends TestCase
      */
     public function it_returns_the_request_when_nothing_is_not_blocked()
     {
-        $this->setUpConfigs('Device', 'Client', '', '', false);
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = null;
+        $ua_config = null;
 
-        $this->assertInstanceOf(Request::class, $this->filter->handle($this->request_mock, $this->returnGiven()));
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn($version);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device)
+                          ->andReturn($device_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->twice()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua)
+                          ->andReturn($ua_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->never()
+                              ->with('route');
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $return);
+
+        $this->assertEquals($this->request_mock, $return);
     }
 
     /**
@@ -166,8 +178,188 @@ class FilterTest extends TestCase
      */
     public function it_returns_the_redirect_when_device_is_blocked()
     {
-        $this->setUpConfigs('Device', 'Client', '*', '*', true);
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = '*';
+        $ua_config = null;
 
-        $this->assertInstanceOf(Request::class, $this->filter->handle($this->request_mock, $this->returnGiven()));
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->withNoArgs()
+                             ->never();
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device)
+                          ->andReturn($device_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.route')
+                          ->andReturn('route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with('route')
+                              ->andReturn($this->redirect_response_mock);
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $return);
+
+        $this->assertEquals($this->redirect_response_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_redirect_when_ua_is_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = [
+            'Device',
+        ];
+        $ua_config = '*';
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->withNoArgs()
+                             ->never();
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device)
+                          ->andReturn($device_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua)
+                          ->andReturn($ua_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.route')
+                          ->andReturn('route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with('route')
+                              ->andReturn($this->redirect_response_mock);
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $return);
+
+        $this->assertEquals($this->redirect_response_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_redirect_when_version_is_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = '1.0.0';
+        $device_config = [
+            'Device',
+        ];
+        $ua_config = [
+            '=' => '1.0.0',
+        ];
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn($version);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device)
+                          ->andReturn($device_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->twice()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua)
+                          ->andReturn($ua_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.route')
+                          ->andReturn('route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with('route')
+                              ->andReturn($this->redirect_response_mock);
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $return);
+
+        $this->assertEquals($this->redirect_response_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_request_when_version_is_not_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = '1.0.8';
+        $device_config = [
+            'Device',
+        ];
+        $ua_config = [
+            '<' => '1.0.0',
+            '>=' => '2',
+        ];
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn($version);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.blocked.' . $device)
+                          ->andReturn($device_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->twice()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua)
+                          ->andReturn($ua_config);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->never()
+                              ->with('route');
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $return);
+
+        $this->assertEquals($this->request_mock, $return);
     }
 }

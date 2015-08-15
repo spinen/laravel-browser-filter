@@ -159,12 +159,18 @@ class FilterTest extends TestCase
                           ->andReturn($ua_config);
 
         $this->config_mock->shouldReceive('get')
-                          ->never()
-                          ->with('browserfilter.blocked.route');
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
 
         $this->redirector_mock->shouldReceive('route')
                               ->never()
                               ->with('route');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
 
         $return = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -201,14 +207,19 @@ class FilterTest extends TestCase
                           ->with('browserfilter.blocked.' . $device . '.' . $ua);
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.blocked.route')
+                          ->twice()
+                          ->with('browserfilter.route')
                           ->andReturn('route');
 
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
                               ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
 
         $return = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -248,14 +259,19 @@ class FilterTest extends TestCase
                           ->andReturn($ua_config);
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.blocked.route')
+                          ->twice()
+                          ->with('browserfilter.route')
                           ->andReturn('route');
 
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
                               ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
 
         $return = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -298,14 +314,19 @@ class FilterTest extends TestCase
                           ->andReturn($ua_config);
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.blocked.route')
+                          ->twice()
+                          ->with('browserfilter.route')
                           ->andReturn('route');
 
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
                               ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
 
         $return = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -326,7 +347,7 @@ class FilterTest extends TestCase
             'Device',
         ];
         $ua_config = [
-            '<' => '1.0.0',
+            '<'  => '1.0.0',
             '>=' => '2',
         ];
 
@@ -349,12 +370,65 @@ class FilterTest extends TestCase
                           ->andReturn($ua_config);
 
         $this->config_mock->shouldReceive('get')
-                          ->never()
-                          ->with('browserfilter.blocked.route');
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
 
         $this->redirector_mock->shouldReceive('route')
                               ->never()
                               ->with('route');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $return);
+
+        $this->assertEquals($this->request_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_redirect_on_the_redirect_route_even_though_client_is_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = '*';
+        $ua_config = null;
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->withNoArgs()
+                             ->never();
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->never()
+                              ->with('route');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('route');
 
         $return = $this->filter->handle($this->request_mock, $this->returnGiven());
 

@@ -11,8 +11,38 @@
     <import file="vendor/spinen/build_common/lib/testing.xml"/>
 
     <target name="build"
-            depends="qa.lint,phpcs,phpmd,phpunit"/>
-    
+            depends="qa.lint,pdepend,phpcs,phpmd,phploc,phpcpd,phpunit"/>
+
+    <!-- Some targets that needs to get moved to common -->
+    <target name="pdepend"
+            description="Calculate software metrics using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml"/>
+            <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg"/>
+            <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg"/>
+            <arg path="${basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="phpcpd"
+            description="Find duplicate code using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd"/>
+            <arg value="${basedir}/build/logs/pmd-cpd.xml"/>
+            <arg path="${basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="phploc"
+            description="Measure project size using PHPLOC">
+        <exec executable="phploc">
+            <arg value="--log-csv"/>
+            <arg value="${basedir}/build/logs/phploc.csv"/>
+            <arg path="${basedir}/src"/>
+        </exec>
+    </target>
+    <!-- End of ones that needs to get added -->
+
     <!-- These are temporary targets for mess detection and code style checks, that does not fail the build -->
     <target name="phpcs" description="Checks for Spinen code-style violations. Includes PSR-2.">
 

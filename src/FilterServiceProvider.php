@@ -21,7 +21,7 @@ class FilterServiceProvider extends ServiceProvider
         $config_file = realpath(__DIR__ . '/config/browserfilter.php');
 
         $this->publishes([
-            $config_file => config_path('browserfilter.php'),
+            $config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
         ]);
 
         $this->mergeConfigFrom($config_file, 'browserfilter');

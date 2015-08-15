@@ -30,7 +30,7 @@ class Filter
     /**
      * @var string
      */
-    protected $config_path = 'browserfilter.blocked.';
+    protected $config_path = 'browserfilter.';
 
     /**
      * The mobile detector instance.
@@ -67,7 +67,7 @@ class Filter
      */
     private function getBlockedBrowsers()
     {
-        return $this->config->get($this->config_path . $this->client->device->family);
+        return $this->config->get($this->config_path . 'blocked.' . $this->client->device->family);
     }
 
     /**
@@ -77,7 +77,21 @@ class Filter
      */
     private function getBlockedBrowserVersions()
     {
-        return $this->config->get($this->config_path . $this->client->device->family . '.' . $this->client->ua->family);
+        return $this->config->get($this->config_path .
+                                  'blocked.' .
+                                  $this->client->device->family .
+                                  '.' .
+                                  $this->client->ua->family);
+    }
+
+    /**
+     * Get the route to the redirect path.
+     *
+     * @return string|null
+     */
+    private function getRedirectRoute()
+    {
+        return $this->config->get($this->config_path . 'route');
     }
 
     /**
@@ -91,8 +105,8 @@ class Filter
     public function handle(Request $request, Closure $next)
     {
         // TODO: Wrap this with the cache repository
-        if ($this->isBlocked()) {
-            return $this->redirector->route($this->config->get($this->config_path . 'route'));
+        if ($this->isNotRedirectPath($request) && $this->isBlocked()) {
+            return $this->redirector->route($this->getRedirectRoute());
         }
 
         return $next($request);
@@ -149,5 +163,19 @@ class Filter
     private function isBlockedDevice()
     {
         return $this->getBlockedBrowsers() === '*';
+    }
+
+    /**
+     * Make sure that the request is not for the page that is the gives the warning upon redirect.
+     *
+     * If we did not test for this, then we would get into a redirect loop.
+     *
+     * @param Request $request Request
+     *
+     * @return bool
+     */
+    private function isNotRedirectPath(Request $request)
+    {
+        return $request->path() !== $this->getRedirectRoute();
     }
 }

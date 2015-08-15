@@ -58,4 +58,14 @@ return [
     */
     'route' => 'incompatible_browser',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Duration to cache the browser as being blocked
+    |--------------------------------------------------------------------------
+    |
+    | The time in minutes to cache that the client is blocked
+    |
+    */
+    'timeout' => 3600,
+
 ];

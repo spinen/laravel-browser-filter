@@ -73,6 +73,11 @@ class Filter
         $this->redirector = $redirector;
     }
 
+    /**
+     * Generate the key to use to cache the determination.
+     *
+     * @return string
+     */
     private function generateCacheKey()
     {
         return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
@@ -102,6 +107,11 @@ class Filter
                                   $this->client->ua->family);
     }
 
+    /**
+     * Get the timeout of the cached value.
+     *
+     * @return mixed
+     */
     private function getCacheTimeout()
     {
         return $this->config->get($this->config_path . 'timeout');
@@ -146,6 +156,15 @@ class Filter
         return $next($request);
     }
 
+    /**
+     * Determines if the client needs to be redirected.
+     *
+     * Caches the determination, so that next time the process of making the determination does not have to be reran.
+     *
+     * @param string $cache_key string
+     *
+     * @return \Illuminate\Http\RedirectResponse|bool
+     */
     private function determineRedirect($cache_key)
     {
         $redirect = false;

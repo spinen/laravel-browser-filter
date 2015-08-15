@@ -5,7 +5,9 @@ namespace Spinen\BrowserFilter;
 use UAParser\Parser;
 
 /**
- * @property Parser
+ * Class ParserCreator
+ *
+ * @package Spinen\BrowserFilter
  */
 class ParserCreator
 {

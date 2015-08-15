@@ -17,11 +17,15 @@ use Mobile_Detect;
 class Filter
 {
     /**
+     * The cache repository instance.
+     *
      * @var Cache
      */
     private $cache;
 
     /**
+     * The client instance.
+     *
      * @var \UAParser\Result\Client
      */
     private $client;
@@ -34,6 +38,8 @@ class Filter
     protected $config;
 
     /**
+     * Location of the config file.
+     *
      * @var string
      */
     protected $config_path = 'browserfilter.';
@@ -46,6 +52,8 @@ class Filter
     private $detector;
 
     /**
+     * The redirector instance.
+     *
      * @var Redirector
      */
     private $redirector;

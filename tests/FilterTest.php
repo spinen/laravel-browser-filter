@@ -2,6 +2,7 @@
 
 namespace Tests\Spinen\BrowserFilter;
 
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,11 @@ use UAParser\Result\UserAgent;
  */
 class FilterTest extends TestCase
 {
+    /**
+     * @var Mockery\Mock
+     */
+    protected $cache_mock;
+
     /**
      * @var Mockery\Mock
      */
@@ -75,7 +81,7 @@ class FilterTest extends TestCase
     {
         $this->setUpMocks();
 
-        $this->filter = new Filter($this->config_mock, $this->detector_mock, $this->parser_mock,
+        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
             $this->redirector_mock);
 
         parent::setUp();
@@ -83,6 +89,8 @@ class FilterTest extends TestCase
 
     protected function setUpMocks()
     {
+        $this->cache_mock = Mockery::mock(Cache::class);
+
         $this->config_mock = Mockery::mock(Config::class);
 
         $agent = 'FakeBrowser/x.y (Spinen; S; PPC Mac OS X Mach-O; en; rv:a.b.c.d) Engine/YYYYMMDD Whatever/a.b.c';
@@ -132,19 +140,34 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_request_when_nothing_is_not_blocked()
+    public function it_returns_the_request_when_nothing_is_not_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
         $version = 'a.b.c';
         $device_config = null;
         $ua_config = null;
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
 
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             $cache_key,
+                             false,
+                             60,
+                         ])
+                         ->andReturnNull();
+
         $this->client_ua_mock->shouldReceive('toVersion')
-                             ->once()
+                             ->twice()
                              ->withNoArgs()
                              ->andReturn($version);
 
@@ -162,6 +185,11 @@ class FilterTest extends TestCase
                           ->once()
                           ->with('browserfilter.route')
                           ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn(60);
 
         $this->redirector_mock->shouldReceive('route')
                               ->never()
@@ -182,20 +210,36 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_redirect_when_device_is_blocked()
+    public function it_returns_the_redirect_when_device_is_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
         $version = 'a.b.c';
         $device_config = '*';
         $ua_config = null;
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
 
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             $cache_key,
+                             $this->redirect_response_mock,
+                             60,
+                         ])
+                         ->andReturnNull();
+
         $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
                              ->withNoArgs()
-                             ->never();
+                             ->andReturn($version);
 
         $this->config_mock->shouldReceive('get')
                           ->once()
@@ -211,6 +255,11 @@ class FilterTest extends TestCase
                           ->with('browserfilter.route')
                           ->andReturn('route');
 
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn(60);
+
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
@@ -231,7 +280,7 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_redirect_when_ua_is_blocked()
+    public function it_returns_the_redirect_when_ua_is_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
@@ -240,13 +289,29 @@ class FilterTest extends TestCase
             'Device',
         ];
         $ua_config = '*';
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
 
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             $cache_key,
+                             $this->redirect_response_mock,
+                             60,
+                         ])
+                         ->andReturnNull();
+
         $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
                              ->withNoArgs()
-                             ->never();
+                             ->andReturn($version);
 
         $this->config_mock->shouldReceive('get')
                           ->once()
@@ -263,6 +328,11 @@ class FilterTest extends TestCase
                           ->with('browserfilter.route')
                           ->andReturn('route');
 
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn(60);
+
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
@@ -283,7 +353,7 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_redirect_when_version_is_blocked()
+    public function it_returns_the_redirect_when_version_is_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
@@ -294,12 +364,27 @@ class FilterTest extends TestCase
         $ua_config = [
             '=' => '1.0.0',
         ];
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
 
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             $cache_key,
+                             $this->redirect_response_mock,
+                             60,
+                         ])
+                         ->andReturnNull();
+
         $this->client_ua_mock->shouldReceive('toVersion')
-                             ->once()
+                             ->twice()
                              ->withNoArgs()
                              ->andReturn($version);
 
@@ -318,6 +403,11 @@ class FilterTest extends TestCase
                           ->with('browserfilter.route')
                           ->andReturn('route');
 
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn(60);
+
         $this->redirector_mock->shouldReceive('route')
                               ->once()
                               ->with('route')
@@ -338,7 +428,7 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_request_when_version_is_not_blocked()
+    public function it_returns_the_request_when_version_is_not_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
@@ -350,12 +440,27 @@ class FilterTest extends TestCase
             '<'  => '1.0.0',
             '>=' => '2',
         ];
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
 
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             $cache_key,
+                             false,
+                             60,
+                         ])
+                         ->andReturnNull();
+
         $this->client_ua_mock->shouldReceive('toVersion')
-                             ->once()
+                             ->twice()
                              ->withNoArgs()
                              ->andReturn($version);
 
@@ -373,6 +478,11 @@ class FilterTest extends TestCase
                           ->once()
                           ->with('browserfilter.route')
                           ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn(60);
 
         $this->redirector_mock->shouldReceive('route')
                               ->never()
@@ -393,16 +503,25 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_does_not_redirect_on_the_redirect_route_even_though_client_is_blocked()
+    public function it_does_not_redirect_on_the_redirect_route_even_though_client_is_blocked_and_not_cached()
     {
         $device = 'Device';
         $ua = 'Client';
         $version = 'a.b.c';
         $device_config = '*';
         $ua_config = null;
+        $cache_key = $device . ':' . $ua . ':' . $version;
 
         $this->client_device_mock->family = $device;
         $this->client_ua_mock->family = $ua;
+
+        $this->cache_mock->shouldReceive('get')
+                         ->never()
+                         ->withAnyArgs();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->never()
+                         ->withAnyArgs();
 
         $this->client_ua_mock->shouldReceive('toVersion')
                              ->withNoArgs()
@@ -421,6 +540,10 @@ class FilterTest extends TestCase
                           ->with('browserfilter.route')
                           ->andReturn('route');
 
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.timeout');
+
         $this->redirector_mock->shouldReceive('route')
                               ->never()
                               ->with('route');
@@ -435,5 +558,129 @@ class FilterTest extends TestCase
         $this->assertInstanceOf(Request::class, $return);
 
         $this->assertEquals($this->request_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_request_when_the_client_is_cached_as_not_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = null;
+        $ua_config = null;
+        $cache_key = $device . ':' . $ua . ':' . $version;
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturn(false);
+
+        $this->cache_mock->shouldReceive('put')
+                         ->never()
+                         ->withAnyArgs();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn($version);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.timeout');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->never()
+                              ->withAnyArgs();
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $return);
+
+        $this->assertEquals($this->request_mock, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_redirect_when_the_client_is_cached_as_blocked()
+    {
+        $device = 'Device';
+        $ua = 'Client';
+        $version = 'a.b.c';
+        $device_config = null;
+        $ua_config = null;
+        $cache_key = $device . ':' . $ua . ':' . $version;
+
+        $this->client_device_mock->family = $device;
+        $this->client_ua_mock->family = $ua;
+
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with($cache_key)
+                         ->andReturn($this->redirect_response_mock);
+
+        $this->cache_mock->shouldReceive('put')
+                         ->never()
+                         ->withAnyArgs();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn($version);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device);
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.blocked.' . $device . '.' . $ua);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.timeout');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->never()
+                              ->withAnyArgs();
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('path');
+
+        $return = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $return);
+
+        $this->assertEquals($this->redirect_response_mock, $return);
     }
 }

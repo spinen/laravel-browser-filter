@@ -18,6 +18,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
+        "illuminate/cache": "^5.0",
         "illuminate/routing": "^5.0",
         "illuminate/support": "^5.0",
         "mobiledetect/mobiledetectlib": "2.8.*",

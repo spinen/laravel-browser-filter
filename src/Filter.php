@@ -3,6 +3,7 @@
 namespace Spinen\BrowserFilter;
 
 use Closure;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -15,6 +16,11 @@ use Mobile_Detect;
  */
 class Filter
 {
+    /**
+     * @var Cache
+     */
+    private $cache;
+
     /**
      * @var \UAParser\Result\Client
      */
@@ -47,17 +53,29 @@ class Filter
     /**
      * Create a new browser filter middleware instance.
      *
+     * @param Cache         $cache      Cache
      * @param Config        $config     Config
      * @param Mobile_Detect $detector   Mobile_Detect
      * @param ParserCreator $parser     ParserCreator
      * @param Redirector    $redirector Redirector
      */
-    public function __construct(Config $config, Mobile_Detect $detector, ParserCreator $parser, Redirector $redirector)
-    {
+    public function __construct(
+        Cache $cache,
+        Config $config,
+        Mobile_Detect $detector,
+        ParserCreator $parser,
+        Redirector $redirector
+    ) {
+        $this->cache = $cache;
         $this->config = $config;
         $this->detector = $detector;
         $this->client = $parser->parseAgent($this->detector->getUserAgent());
         $this->redirector = $redirector;
+    }
+
+    private function generateCacheKey()
+    {
+        return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
     /**
@@ -84,6 +102,11 @@ class Filter
                                   $this->client->ua->family);
     }
 
+    private function getCacheTimeout()
+    {
+        return $this->config->get($this->config_path . 'timeout');
+    }
+
     /**
      * Get the route to the redirect path.
      *
@@ -104,9 +127,30 @@ class Filter
      */
     public function handle(Request $request, Closure $next)
     {
-        // TODO: Wrap this with the cache repository
-        if ($this->isNotRedirectPath($request) && $this->isBlocked()) {
-            return $this->redirector->route($this->getRedirectRoute());
+        if ($this->onRedirectPath($request)) {
+            return $next($request);
+        }
+
+        $cache_key = $this->generateCacheKey();
+
+        $redirect = $this->cache->get($cache_key);
+
+        if ($redirect === false) {
+            return $next($request);
+        }
+
+        if (is_null($redirect)) {
+            $redirect = $this->isBlocked();
+        }
+
+        if ($redirect === true) {
+            $redirect = $this->redirector->route($this->getRedirectRoute());
+        }
+
+        $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+
+        if ($redirect) {
+            return $redirect;
         }
 
         return $next($request);
@@ -119,6 +163,7 @@ class Filter
      */
     private function isBlocked()
     {
+        //        dd("In here");
         return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
     }
 
@@ -166,7 +211,7 @@ class Filter
     }
 
     /**
-     * Make sure that the request is not for the page that is the gives the warning upon redirect.
+     * Check to see if we are on the redirect page.
      *
      * If we did not test for this, then we would get into a redirect loop.
      *
@@ -174,8 +219,8 @@ class Filter
      *
      * @return bool
      */
-    private function isNotRedirectPath(Request $request)
+    private function onRedirectPath(Request $request)
     {
-        return $request->path() !== $this->getRedirectRoute();
+        return $request->path() === $this->getRedirectRoute();
     }
 }

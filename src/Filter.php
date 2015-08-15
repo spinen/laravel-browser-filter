@@ -30,7 +30,7 @@ class Filter
     /**
      * @var string
      */
-    protected $config_path = 'browserfilter.blocked.';
+    protected $config_path = 'browserfilter.';
 
     /**
      * The mobile detector instance.
@@ -67,7 +67,7 @@ class Filter
      */
     private function getBlockedBrowsers()
     {
-        return $this->config->get($this->config_path . $this->client->device->family);
+        return $this->config->get($this->config_path . 'blocked.' . $this->client->device->family);
     }
 
     /**
@@ -77,7 +77,7 @@ class Filter
      */
     private function getBlockedBrowserVersions()
     {
-        return $this->config->get($this->config_path . $this->client->device->family . '.' . $this->client->ua->family);
+        return $this->config->get($this->config_path . 'blocked.' . $this->client->device->family . '.' . $this->client->ua->family);
     }
 
     /**

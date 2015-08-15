@@ -4,34 +4,7 @@
     This is the "dist(ribution)" phpunit.xml.dist file.  It sets the defaults that are then over written by any files in
     phpunit.xml, which is then over wrote by flags passed in via the command line.  The plan is that this file is to be
     used by ci to do the full suit of tests, and a developer can copy this file to phpunit.xml to trim down some of the
-    options.  There are 2 main things that you can do to speed up the test by modifying the phpunit.xml file...
-
-        1) Un comment the "groups" section below - Causes phpunit to only run the tests
-           with the "@group unit" annotation
-        2) Comment out the "filter", "listeners", & "logging" sections below - Causes
-           phpunit to not log the code coverage
-
-    You can do either or both of the changes.  If you have defined a phpunit.xml file, and want to run the tests like ci
-    does, then you can run...
-
-        phpunit ==configuration phpunit.xml.dist
-
-    We are using the following conventions in grouping the tests...
-
-        * unit = No database access & no browser needs
-        * database = Requires database to run
-        * browser = Requires a browser be driven to "interact" with a rendered page
-
-    You can run any of the groups that you want by passing the "==group" flag (i.e. ==group unit,database) to run the
-    unit tests & the database tests.
-
-    We are organizing the test in /tests/phpunit/ in a near 1 to 1 with the organization of /app/, but since we don't
-    plan on testing the controllers, then the tests in the /tests/phpunit/Http folder will be more of a logical test of
-    the http layer.  If there is any complex logic in any of the nested classes in /app/Http, then you should make a
-    corresponding folder in /tests/phpunit/Http to house the Test file with name of the class followed by Test (i.e.
-    /app/Http/Middleware/SomeGreatFilter.php would have a test at /tests/phpunit/Http/Middleware/SomeGreatFilter.php).
-
-    NOTE: XML does not allow you to have a double dash in a comment, so replace == with dashdash
+    options.
 -->
 
 <phpunit addUncoveredFilesFromWhitelist="true"
@@ -54,51 +27,24 @@
         </testsuite>
     </testsuites>
 
-    <!-- Remove this comment to only run "unit" test
-    <groups>
-        <include>
-            <group>unit</group>
-        </include>
-        <exclude>
-            <group>database</group>
-            <group>browser</group>
-        </exclude>
-    </groups>
-    -->
-
     <php>
         <!-- <env name="VARIABLE" value="value"/> -->
     </php>
 
-    <!-- Comment from here down to disable code coverage & speed up test
-         NOTE: Just delete the next line
-    -->
     <filter>
         <whitelist>
-            <directory suffix=".php">app/</directory>
+            <directory suffix=".php">src/</directory>
             <exclude>
-                <file>./app/Console/Commands/Inspire.php</file>
-                <file>./app/Console/Kernel.php</file>
-                <file>./app/Events/Event.php</file>
-                <file>./app/Exceptions/Handler.php</file>
-                <file>./app/Http/Controllers/Controller.php</file>
-                <file>./app/Http/Kernel.php</file>
-                <file>./app/Http/Middleware/Authenticate.php</file>
-                <file>./app/Http/Middleware/EncryptCookies.php</file>
-                <file>./app/Http/Middleware/RedirectIfAuthenticated.php</file>
-                <file>./app/Http/Middleware/VerifyCsrfToken.php</file>
-                <file>./app/Http/Request/Request.php</file>
-                <file>./app/Http/routes.php</file>
-                <file>./app/Jobs/Job.php</file>
-                <file>./app/Providers/AppServiceProvider.php</file>
-                <file>./app/Providers/EventServiceProvider.php</file>
-                <file>./app/Providers/RouteServiceProvider.php</file>
+                <!--<file>src/file.php</file>-->
+                <directory suffix=".php">src/config</directory>
             </exclude>
         </whitelist>
     </filter>
+
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
     </listeners>
+
     <logging>
         <log type="coverage-html"
              target="./build/coverage"
@@ -113,7 +59,4 @@
         <log type="junit" target="./build/logs/junit.xml"
              logIncompleteSkipped="true"/>
     </logging>
-    <!--
-         NOTE: Just delete the above line
-         Stop here -->
 </phpunit>

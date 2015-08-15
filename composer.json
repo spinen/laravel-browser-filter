@@ -18,8 +18,11 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "illuminate/support": "~5.0",
-        "hisorange/browser-detect": "~2.0"
+        "illuminate/cache": "^5.0",
+        "illuminate/routing": "^5.0",
+        "illuminate/support": "^5.0",
+        "mobiledetect/mobiledetectlib": "2.8.*",
+        "ua-parser/uap-php": "^3.4"
     },
     "require-dev": {
         "illuminate/http": "~5.0",
@@ -28,7 +31,8 @@
         "psy/psysh": "0.4.*",
         "spinen/build_common": "0.5.*",
         "spinen/code_sniffs": "0.1.*",
-        "spinen/mess_detector_rules": "0.1.*"
+        "spinen/mess_detector_rules": "0.1.*",
+        "symfony/var-dumper": "^2.7"
     },
     "autoload": {
         "files": [

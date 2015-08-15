@@ -145,9 +145,11 @@ class Filter
 
         if ($redirect === true) {
             $redirect = $this->redirector->route($this->getRedirectRoute());
-        }
 
-        $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+        } elseif ($redirect === false) {
+            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+        }
 
         if ($redirect) {
             return $redirect;

@@ -21,14 +21,14 @@ class Filter
      *
      * @var Cache
      */
-    private $cache;
+    protected $cache;
 
     /**
      * The client instance.
      *
      * @var \UAParser\Result\Client
      */
-    private $client;
+    protected $client;
 
     /**
      * The config repository instance.
@@ -49,14 +49,14 @@ class Filter
      *
      * @var Mobile_Detect
      */
-    private $detector;
+    protected $detector;
 
     /**
      * The redirector instance.
      *
      * @var Redirector
      */
-    private $redirector;
+    protected $redirector;
 
     /**
      * Create a new browser filter middleware instance.

@@ -135,20 +135,8 @@ class Filter
 
         $redirect = $this->cache->get($cache_key);
 
-        if ($redirect === false) {
-            return $next($request);
-        }
-
         if (is_null($redirect)) {
-            $redirect = $this->isBlocked();
-        }
-
-        if ($redirect === true) {
-            $redirect = $this->redirector->route($this->getRedirectRoute());
-
-            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
-        } elseif ($redirect === false) {
-            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+            $redirect = $this->determineRedirect($cache_key);
         }
 
         if ($redirect) {
@@ -158,6 +146,19 @@ class Filter
         return $next($request);
     }
 
+    private function determineRedirect($cache_key)
+    {
+        $redirect = false;
+
+        if ($this->isBlocked()) {
+            $redirect = $this->redirector->route($this->getRedirectRoute());
+        }
+
+        $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+
+        return $redirect;
+    }
+
     /**
      * Checks to see if the browser/client is blocked.
      *
@@ -165,7 +166,6 @@ class Filter
      */
     private function isBlocked()
     {
-        //        dd("In here");
         return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
     }
 

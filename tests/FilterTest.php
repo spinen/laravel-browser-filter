@@ -2,7 +2,7 @@
 
 namespace Tests\Spinen\BrowserFilter;
 
-use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -83,7 +83,7 @@ class FilterTest extends TestCase
 
     protected function setUpMocks()
     {
-        $this->config_mock = Mockery::mock(Repository::class);
+        $this->config_mock = Mockery::mock(Config::class);
 
         $agent = 'FakeBrowser/x.y (Spinen; S; PPC Mac OS X Mach-O; en; rv:a.b.c.d) Engine/YYYYMMDD Whatever/a.b.c';
 

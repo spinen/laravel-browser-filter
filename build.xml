@@ -11,7 +11,7 @@
     <import file="vendor/spinen/build_common/lib/testing.xml"/>
 
     <target name="build"
-            depends="qa.lint,pdepend,phpcs,phpmd,phploc,phpcpd,phpunit"/>
+            depends="qa.lint,phpcs,phpmd,phploc,phpcpd,phpunit"/>
 
     <!-- Some targets that needs to get moved to common -->
     <!--<target name="pdepend"

@@ -11,7 +11,7 @@
     <import file="vendor/spinen/build_common/lib/testing.xml"/>
 
     <target name="build"
-            depends="qa.lint,phpcs,phpmd,phploc,phpcpd,phpunit"/>
+            depends="qa.lint,phpcs,phpmd,phpcpd,phpunit"/>
 
     <!-- Some targets that needs to get moved to common -->
     <!--<target name="pdepend"
@@ -33,14 +33,14 @@
         </exec>
     </target>
 
-    <target name="phploc"
-            description="Measure project size using PHPLOC">
-        <exec executable="phploc">
-            <arg value="--log-csv"/>
-            <arg value="${basedir}/build/logs/phploc.csv"/>
-            <arg path="${basedir}/src"/>
-        </exec>
-    </target>
+    <!--<target name="phploc"-->
+            <!--description="Measure project size using PHPLOC">-->
+        <!--<exec executable="phploc">-->
+            <!--<arg value="&#45;&#45;log-csv"/>-->
+            <!--<arg value="${basedir}/build/logs/phploc.csv"/>-->
+            <!--<arg path="${basedir}/src"/>-->
+        <!--</exec>-->
+    <!--</target>-->
     <!-- End of ones that needs to get added -->
 
     <!-- These are temporary targets for mess detection and code style checks, that does not fail the build -->

@@ -15,9 +15,10 @@ We specify the browsers that we are going to support on the front of a project, 
 
 ## Prerequisite
 
-You have to have HiSoRange Browser Detect package installed
+As side from Laravel 5.x, there are 2 packages that are required
 
-https://github.com/hisorange/browser-detect
+* [mobiledetect](https://github.com/serbanghita/Mobile-Detect) - To get the user agent string.  I know that this package is not need to get to the string, but there are other features that I plan on using in the future, so I kept it installed.
+* [ua-parser PHP Library](https://github.com/tobie/ua-parser/tree/master/php) - To parse the user agent string
 
 ## Install
 
@@ -27,7 +28,7 @@ Install Browser Filter:
 $ composer require spinen/laravel-browser-filter
 ```
 
-Add the Service Provider:
+Add the Service Provider to `config/app.php`:
 
 ```php
 'providers' => [
@@ -50,4 +51,21 @@ Register the HTTP Middleware in file `app/Http/Kernel.php`:
         \Spinen\BrowserFilter\Filter::class,
 ```
 
-Then edit `config/browserfilter.php` with correct versions of broswers.
+Build a page with named route to redirect blocked browsers to:
+
+```php
+    // This is only a simple example.  You would probably want to route to a controller with a view.
+    Route::get('incompatible_browser', ['as' => 'incompatible_browser', 'uses' => function() {
+        return "You are using a blocked browser.";
+    }]);
+```
+
+## Configure middleware options
+
+During the install process `config/browserfilter.php` as copied to the project.  That file is fully documented, so please read it to know how to configure the middleware.
+
+There are 3 top level items that you can configure...
+
+1. blocked - The array of devices/browsers/versions to block
+2. route - The name of the route to redirect the user if they are using a blocked client
+3. timeout - The length of time to cache the client

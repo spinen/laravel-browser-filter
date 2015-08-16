@@ -7,7 +7,13 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
+use Spinen\BrowserFilter\Support\ParserCreator;
 
+/**
+ * Class Filter
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 abstract class Filter
 {
     /**

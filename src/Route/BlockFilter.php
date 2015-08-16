@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Closure;
 use Illuminate\Http\Request;
 
+/**
+ * Class BlockFilter
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 class BlockFilter extends Filter
 {
     /**

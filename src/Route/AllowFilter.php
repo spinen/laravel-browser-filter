@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Closure;
 use Illuminate\Http\Request;
 
+/**
+ * Class AllowFilter
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 class AllowFilter extends Filter
 {
     /**

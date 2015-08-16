@@ -32,7 +32,7 @@
         "spinen/build_common": "0.5.*",
         "spinen/code_sniffs": "0.1.*",
         "spinen/mess_detector_rules": "0.1.*",
-        "symfony/var-dumper": "^2.7"
+        "symfony/var-dumper": "2.7.*"
     },
     "autoload": {
         "files": [

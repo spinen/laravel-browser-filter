@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter;
+namespace Tests\Spinen\BrowserFilter\Stack;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -9,8 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
 use Mockery;
-use Spinen\BrowserFilter\Filter;
-use Spinen\BrowserFilter\ParserCreator;
+use Spinen\BrowserFilter\Stack\Filter;
+use Spinen\BrowserFilter\Support\ParserCreator;
+use Tests\Spinen\BrowserFilter\TestCase;
 use UAParser\Result\Client;
 use UAParser\Result\Device;
 use UAParser\Result\UserAgent;
@@ -18,7 +19,7 @@ use UAParser\Result\UserAgent;
 /**
  * Class FilterTest
  *
- * @package Tests\Spinen\BrowserFilter
+ * @package Tests\Spinen\BrowserFilter\Stack
  */
 class FilterTest extends TestCase
 {

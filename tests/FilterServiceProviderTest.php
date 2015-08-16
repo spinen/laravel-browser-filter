@@ -8,6 +8,11 @@ use Illuminate\Support\ServiceProvider;
 use Mockery;
 use Spinen\BrowserFilter\FilterServiceProvider;
 
+/**
+ * Class FilterServiceProviderTest
+ *
+ * @package Tests\Spinen\BrowserFilter
+ */
 class FilterServiceProviderTest extends TestCase
 {
     /**

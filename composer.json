@@ -36,7 +36,7 @@
     },
     "autoload": {
         "files": [
-            "src/helper.php"
+            "src/Support/helper.php"
         ],
         "psr-4": {
             "Spinen\\BrowserFilter\\": "src"

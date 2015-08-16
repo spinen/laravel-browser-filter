@@ -1,6 +1,6 @@
 <?php
 
-namespace Spinen\BrowserFilter;
+namespace Spinen\BrowserFilterSupport;
 
 use UAParser\Parser;
 

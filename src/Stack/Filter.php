@@ -1,6 +1,6 @@
 <?php
 
-namespace Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter\Stack;
 
 use Closure;
 use Illuminate\Contracts\Cache\Repository as Cache;

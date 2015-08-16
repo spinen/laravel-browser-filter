@@ -1,6 +1,6 @@
 <?php
 
-namespace Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter\Route;
 
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
 
-abstract class RouteFilter
+abstract class Filter
 {
     /**
      * The client instance.

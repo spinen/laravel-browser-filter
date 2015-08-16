@@ -1,11 +1,11 @@
 <?php
 
-namespace Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter\Route;
 
 use Closure;
 use Illuminate\Http\Request;
 
-class RouteAllowFilter extends RouteFilter
+class BlockFilter extends Filter
 {
     /**
      * @inheritDoc

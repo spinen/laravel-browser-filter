@@ -4,13 +4,14 @@ namespace Spinen\BrowserFilter\Route;
 
 use Closure;
 use Illuminate\Http\Request;
+use Spinen\BrowserFilter\Contracts\Filterable;
 
 /**
  * Class BlockFilter
  *
  * @package Spinen\BrowserFilter\Route
  */
-class BlockFilter extends Filter
+class BlockFilter extends Filter implements Filterable
 {
     /**
      * @inheritDoc

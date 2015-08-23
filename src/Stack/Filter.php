@@ -8,6 +8,8 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
+use Spinen\BrowserFilter\Contracts\Filterable;
+use Spinen\BrowserFilter\Support\DecipherRules;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
@@ -15,8 +17,10 @@ use Spinen\BrowserFilter\Support\ParserCreator;
  *
  * @package Spinen\BrowserFilter\Stack
  */
-class Filter
+class Filter implements Filterable
 {
+    use DecipherRules;
+
     /**
      * The cache repository instance.
      *
@@ -87,27 +91,23 @@ class Filter
      *
      * @return string
      */
-    private function generateCacheKey()
+    protected function generateCacheKey()
     {
         return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
     /**
-     * Get the browsers being filtered.
-     *
-     * @return string|array
+     * @inheritDoc
      */
-    private function getBlockedBrowsers()
+    public function getBlockedBrowsers()
     {
         return $this->config->get($this->config_path . 'blocked.' . $this->client->device->family);
     }
 
     /**
-     * Get the versions of the browsers being filtered.
-     *
-     * @return string|array
+     * @inheritDoc
      */
-    private function getBlockedBrowserVersions()
+    public function getBlockedBrowserVersions()
     {
         return $this->config->get($this->config_path .
                                   'blocked.' .
@@ -121,18 +121,17 @@ class Filter
      *
      * @return mixed
      */
-    private function getCacheTimeout()
+    protected function getCacheTimeout()
     {
         return $this->config->get($this->config_path . 'timeout');
     }
 
     /**
-     * Get the route to the redirect path.
-     *
-     * @return string|null
+     * @inheritDoc
      */
-    private function getRedirectRoute()
+    public function getRedirectRoute()
     {
+        // TODO: This is a duplicate
         return $this->config->get($this->config_path . 'route');
     }
 
@@ -156,6 +155,8 @@ class Filter
 
         if (is_null($redirect)) {
             $redirect = $this->determineRedirect($cache_key);
+
+            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
         }
 
         if ($redirect) {
@@ -163,81 +164,6 @@ class Filter
         }
 
         return $next($request);
-    }
-
-    /**
-     * Determines if the client needs to be redirected.
-     *
-     * Caches the determination, so that next time the process of making the determination does not have to be reran.
-     *
-     * @param string $cache_key string
-     *
-     * @return \Illuminate\Http\RedirectResponse|bool
-     */
-    private function determineRedirect($cache_key)
-    {
-        $redirect = false;
-
-        if ($this->isBlocked()) {
-            $redirect = $this->redirector->route($this->getRedirectRoute());
-        }
-
-        $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
-
-        return $redirect;
-    }
-
-    /**
-     * Checks to see if the browser/client is blocked.
-     *
-     * @return bool
-     */
-    private function isBlocked()
-    {
-        return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
-    }
-
-    /**
-     * Checks to see if all versions of the browser is blocked.
-     *
-     * @return bool
-     */
-    private function isBlockedBrowser()
-    {
-        return $this->getBlockedBrowserVersions() === '*';
-    }
-
-    /**
-     * Checks to see if the version of the browser is blocked.
-     *
-     * Uses the php version_compare function to decide if there is a match.
-     *
-     * @link http://php.net/manual/en/function.version-compare.php
-     *
-     * @return bool
-     */
-    private function isBlockedBrowserVersion()
-    {
-        $denied = false;
-
-        // cache it, so that we don't have to keep asking for it
-        $client_version = $this->client->ua->toVersion();
-
-        foreach ((array)$this->getBlockedBrowserVersions() as $operator => $version) {
-            $denied |= (bool)version_compare($client_version, $version, $operator);
-        }
-
-        return $denied;
-    }
-
-    /**
-     * Checks to see if all browsers of the device family is blocked.
-     *
-     * @return bool
-     */
-    private function isBlockedDevice()
-    {
-        return $this->getBlockedBrowsers() === '*';
     }
 
     /**
@@ -249,7 +175,7 @@ class Filter
      *
      * @return bool
      */
-    private function onRedirectPath(Request $request)
+    protected function onRedirectPath(Request $request)
     {
         return $request->path() === $this->getRedirectRoute();
     }

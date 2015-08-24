@@ -16,6 +16,14 @@ class FilterStub extends Filter
     /**
      * @inheritDoc
      */
+    public function parseFilterString($filter_string)
+    {
+        // TODO: Implement parseFilterString() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
     function process(Request $request, Closure $next, array $filter)
     {
         // TODO: Implement process() method.

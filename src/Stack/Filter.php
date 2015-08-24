@@ -8,7 +8,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
-use Spinen\BrowserFilter\Contracts\Filterable;
 use Spinen\BrowserFilter\Support\DecipherRules;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
@@ -17,7 +16,7 @@ use Spinen\BrowserFilter\Support\ParserCreator;
  *
  * @package Spinen\BrowserFilter\Stack
  */
-class Filter implements Filterable
+class Filter
 {
     use DecipherRules;
 

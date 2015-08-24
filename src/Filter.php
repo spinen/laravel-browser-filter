@@ -7,7 +7,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
-use Spinen\BrowserFilter\Contracts\Filterable;
 use Spinen\BrowserFilter\Support\DecipherRules;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
@@ -16,7 +15,7 @@ use Spinen\BrowserFilter\Support\ParserCreator;
  *
  * @package Spinen\BrowserFilter\Route
  */
-abstract class Filter implements Filterable
+abstract class Filter
 {
     use DecipherRules;
 
@@ -146,7 +145,9 @@ abstract class Filter implements Filterable
     }
 
     /**
-     * @inheritDoc
+     * Get the browsers being filtered.
+     *
+     * @return string|array
      */
     public function getBlockedBrowsers()
     {
@@ -154,7 +155,9 @@ abstract class Filter implements Filterable
     }
 
     /**
-     * @inheritDoc
+     * Get the versions of the browsers being filtered.
+     *
+     * @return string|array
      */
     public function getBlockedBrowserVersions()
     {
@@ -163,11 +166,12 @@ abstract class Filter implements Filterable
     }
 
     /**
-     * @inheritDoc
+     * Get the route to the redirect path.
+     *
+     * @return string|null
      */
     public function getRedirectRoute()
     {
-        // TODO: This is a duplicate
         return ($this->redirect_route) ?: $this->config->get($this->config_path . 'route');
     }
 

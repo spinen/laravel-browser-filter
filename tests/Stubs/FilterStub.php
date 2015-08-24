@@ -18,7 +18,7 @@ class FilterStub extends Filter
      */
     public function parseFilterString($filter_string)
     {
-        // TODO: Implement parseFilterString() method.
+        $this->rules = $filter_string;
     }
 
     /**

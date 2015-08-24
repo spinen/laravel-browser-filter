@@ -135,7 +135,6 @@ class FilterTest extends TestCase
      */
     public function it_gets_the_correct_rules_for_the_device()
     {
-        $filter_string = 'First/Second/<=3;First/Second/>4;First/Fifth';
         $rules = [
             'First' => [
                 'Second' => [
@@ -146,7 +145,7 @@ class FilterTest extends TestCase
             ],
         ];
 
-        $this->filter->parseFilterString($filter_string);
+        $this->filter->parseFilterString($rules);
 
         $device = 'First';
         $this->client_device_mock->family = $device;
@@ -159,8 +158,7 @@ class FilterTest extends TestCase
      */
     public function it_gets_the_correct_rules_for_the_browser()
     {
-        $filter_string = 'First/Second/<=3;First/Second/>4;First/Fifth';
-        $rules = [
+       $rules = [
             'First' => [
                 'Second' => [
                     '<=' => '3',
@@ -170,7 +168,7 @@ class FilterTest extends TestCase
             ],
         ];
 
-        $this->filter->parseFilterString($filter_string);
+        $this->filter->parseFilterString($rules);
 
         $device = 'First';
         $ua = 'Second';

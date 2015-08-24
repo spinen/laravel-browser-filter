@@ -18,7 +18,7 @@ class BlockFilter extends Filter
     /**
      * @inheritDoc
      */
-    function process(Request $request, Closure $next, array $filter)
+    function process(Request $request, Closure $next)
     {
         dd($filter);
         //TODO: Write the logic here

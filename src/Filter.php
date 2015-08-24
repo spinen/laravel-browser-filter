@@ -197,9 +197,8 @@ abstract class Filter
      *
      * @param Request $request Request
      * @param Closure $next    Closure
-     * @param array   $filter  The array of filters to check against the request
      *
      * @return mixed
      */
-    abstract function process(Request $request, Closure $next, array $filter);
+    abstract function process(Request $request, Closure $next);
 }

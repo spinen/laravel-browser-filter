@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Route\Stubs;
+namespace Tests\Spinen\BrowserFilter\Stubs;
 
 use Closure;
 use Illuminate\Http\Request;
-use Spinen\BrowserFilter\Route\Filter;
+use Spinen\BrowserFilter\Filter;
 
 /**
  * Class FilterStub

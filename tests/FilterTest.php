@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Route;
+namespace Tests\Spinen\BrowserFilter;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
@@ -9,8 +9,7 @@ use Illuminate\Routing\Redirector;
 use Mobile_Detect;
 use Mockery;
 use Spinen\BrowserFilter\Support\ParserCreator;
-use Tests\Spinen\BrowserFilter\Route\Stubs\FilterStub as Filter;
-use Tests\Spinen\BrowserFilter\TestCase;
+use Tests\Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 use UAParser\Result\Client;
 use UAParser\Result\Device;
 use UAParser\Result\UserAgent;

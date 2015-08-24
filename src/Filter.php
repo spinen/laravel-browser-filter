@@ -1,6 +1,6 @@
 <?php
 
-namespace Spinen\BrowserFilter\Route;
+namespace Spinen\BrowserFilter;
 
 use Closure;
 use Illuminate\Contracts\Config\Repository as Config;

@@ -5,6 +5,7 @@ namespace Spinen\BrowserFilter\Route;
 use Closure;
 use Illuminate\Http\Request;
 use Spinen\BrowserFilter\Contracts\Filterable;
+use Spinen\BrowserFilter\Filter;
 
 /**
  * Class BlockFilter

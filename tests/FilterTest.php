@@ -122,12 +122,52 @@ class FilterTest extends TestCase
         $this->redirect_response_mock = Mockery::mock(RedirectResponse::class);
     }
 
+    private function returnGiven()
+    {
+        return function ($given) {
+            return $given;
+        };
+    }
+
     /**
      * @test
      */
     public function it_can_be_constructed()
     {
         $this->assertInstanceOf(Filter::class, $this->filter);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_value_from_the_implimenting_class_process_method()
+    {
+        // In the stub, the process, method just returns "Stub"
+        $this->assertEquals('Stub', $this->filter->handle($this->request_mock, $this->returnGiven()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_parses_the_third_parameter_and_causes_the_rules_to_be_set()
+    {
+        $rules = 'The rules';
+
+        $this->filter->handle($this->request_mock, $this->returnGiven(), $rules);
+
+        $this->assertEquals($rules, $this->filter->getRules());
+    }
+
+    /**
+     * @test
+     */
+    public function it_parses_the_fourth_parameter_and_causes_the_redirect_route_to_be_set()
+    {
+        $redirect = 'The redirect';
+
+        $this->filter->handle($this->request_mock, $this->returnGiven(), null, $redirect);
+
+        $this->assertEquals($redirect, $this->filter->getRedirectRoute());
     }
 
     /**

@@ -13,6 +13,8 @@ use Spinen\BrowserFilter\Filter;
  */
 class BlockFilter extends Filter
 {
+    use StringFilterParser;
+
     /**
      * @inheritDoc
      */

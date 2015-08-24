@@ -13,6 +13,8 @@ use Spinen\BrowserFilter\Filter;
  */
 class AllowFilter extends Filter
 {
+    use StringFilterParser;
+
     /**
      * @inheritDoc
      */

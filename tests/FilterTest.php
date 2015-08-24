@@ -2,6 +2,7 @@
 
 namespace Tests\Spinen\BrowserFilter;
 
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,11 @@ use UAParser\Result\UserAgent;
  */
 class FilterTest extends TestCase
 {
+    /**
+     * @var Mockery\Mock
+     */
+    protected $cache_mock;
+
     /**
      * @var Mockery\Mock
      */
@@ -75,7 +81,7 @@ class FilterTest extends TestCase
     {
         $this->setUpMocks();
 
-        $this->filter = new Filter($this->config_mock, $this->detector_mock, $this->parser_mock,
+        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
             $this->redirector_mock);
 
         parent::setUp();
@@ -83,6 +89,8 @@ class FilterTest extends TestCase
 
     protected function setUpMocks()
     {
+        $this->cache_mock = Mockery::mock(Cache::class);
+
         $this->config_mock = Mockery::mock(Config::class);
 
         $agent = 'FakeBrowser/x.y (Spinen; S; PPC Mac OS X Mach-O; en; rv:a.b.c.d) Engine/YYYYMMDD Whatever/a.b.c';
@@ -120,91 +128,6 @@ class FilterTest extends TestCase
     public function it_can_be_constructed()
     {
         $this->assertInstanceOf(Filter::class, $this->filter);
-    }
-
-    /**
-     * @test
-     */
-    public function it_parses_a_filter_string_where_it_understands_to_default_remaining_parameters()
-    {
-        $filter_string = 'First;Second/Third;Fourth/Fifth/6';
-        $expected = [
-            'First'  => '*',
-            'Second' => [
-                'Third' => '*',
-            ],
-            'Fourth' => [
-                'Fifth' => [
-                    '=' => '6',
-                ],
-            ],
-        ];
-
-        $this->filter->parseFilterString($filter_string);
-
-        $this->assertEquals($expected, $this->filter->getRules());
-    }
-
-    /**
-     * @test
-     */
-    public function it_parses_a_filter_string_and_ignores_null_values()
-    {
-        $filter_string = 'First/;Second/Third/;Fourth/Fifth/6|;';
-        $expected = [
-            'First'  => '*',
-            'Second' => [
-                'Third' => '*',
-            ],
-            'Fourth' => [
-                'Fifth' => [
-                    '=' => '6',
-                ],
-            ],
-        ];
-
-        $this->filter->parseFilterString($filter_string);
-
-        $this->assertEquals($expected, $this->filter->getRules());
-    }
-
-    /**
-     * @test
-     */
-    public function it_merges_values_when_parsing_a_filter_string()
-    {
-        $filter_string = 'First/Second/<=3;First/Second/>4;First/Fifth';
-        $expected = [
-            'First' => [
-                'Second' => [
-                    '<=' => '3',
-                    '>'  => '4',
-                ],
-                'Fifth'  => '*',
-            ],
-        ];
-
-        $this->filter->parseFilterString($filter_string);
-
-        $this->assertEquals($expected, $this->filter->getRules());
-    }
-
-    /**
-     * @test
-     */
-    public function it_allows_a_star_or_default_to_override_existing()
-    {
-        $filter_string = 'First/Second/<=2;First/Second;Third/Forth/=3;Third';
-        $expected = [
-            'First' => [
-                'Second' => '*',
-            ],
-            'Third' => '*',
-        ];
-
-        $this->filter->parseFilterString($filter_string);
-
-        $this->assertEquals($expected, $this->filter->getRules());
     }
 
     /**

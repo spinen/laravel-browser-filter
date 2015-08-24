@@ -3,6 +3,7 @@
 namespace Spinen\BrowserFilter;
 
 use Closure;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -18,6 +19,13 @@ use Spinen\BrowserFilter\Support\ParserCreator;
 abstract class Filter
 {
     use DecipherRules;
+
+    /**
+     * The cache repository instance.
+     *
+     * @var Cache
+     */
+    protected $cache;
 
     /**
      * The client instance.
@@ -71,77 +79,24 @@ abstract class Filter
     /**
      * Create a new browser filter middleware instance.
      *
+     * @param Cache         $cache      Cache
      * @param Config        $config     Config
      * @param Mobile_Detect $detector   Mobile_Detect
      * @param ParserCreator $parser     ParserCreator
      * @param Redirector    $redirector Redirector
      */
     public function __construct(
+        Cache $cache,
         Config $config,
         Mobile_Detect $detector,
         ParserCreator $parser,
         Redirector $redirector
     ) {
+        $this->cache = $cache;
         $this->config = $config;
         $this->detector = $detector;
         $this->client = $parser->parseAgent($this->detector->getUserAgent());
         $this->redirector = $redirector;
-    }
-
-    /**
-     * Loop through all of the parameters in the string and process them.
-     *
-     * @param string $filter The filter separated by '/'
-     *
-     * @return void
-     */
-    private function extractRule($filter)
-    {
-        list($device, $browser, $operator_versions) = array_pad(array_filter(explode('/', $filter, 3)), 3, '*');
-
-        // Block all browsers of the device
-        if ('*' === $browser) {
-            $this->rules[$device] = '*';
-
-            return;
-        }
-
-        // Block all versions of the browser
-        if ('*' === $operator_versions) {
-            $this->rules[$device][$browser] = '*';
-
-            return;
-        }
-
-        $this->rules[$device][$browser] = $this->extractVersions($device, $browser, $operator_versions);
-
-        return;
-    }
-
-    /**
-     * Loop through all of the versions in the string and process them.
-     *
-     * @param string $device            The device
-     * @param string $browser           The browser
-     * @param string $operator_versions The versions separated by '|'
-     *
-     * @return array
-     */
-    private function extractVersions($device, $browser, $operator_versions)
-    {
-        // Were there existing rules for the browser?
-        $versions = empty($this->rules[$device][$browser]) ? [] : $this->rules[$device][$browser];
-
-        foreach (array_filter(explode('|', $operator_versions)) as $operator_version) {
-            // Remove everything to the leading numbers
-            $version = preg_replace("/^[^\\d]*/u", "", $operator_version);
-            // Default no operator to equals
-            $operator = str_replace($version, '', $operator_version) ?: '=';
-
-            $versions[$operator] = $version;
-        }
-
-        return $versions;
     }
 
     /**
@@ -151,7 +106,7 @@ abstract class Filter
      */
     public function getBlockedBrowsers()
     {
-        return ($this->haveRulesForDevice()) ? $this->rules[$this->client->device->family] : null;
+        return ($this->haveRulesForDevice()) ? $this->getRules()[$this->client->device->family] : null;
     }
 
     /**
@@ -162,7 +117,7 @@ abstract class Filter
     public function getBlockedBrowserVersions()
     {
         return ($this->haveVersionsForBrowser())
-            ? $this->rules[$this->client->device->family][$this->client->ua->family] : null;
+            ? $this->getRules()[$this->client->device->family][$this->client->ua->family] : null;
     }
 
     /**
@@ -172,7 +127,7 @@ abstract class Filter
      */
     public function getRedirectRoute()
     {
-        return ($this->redirect_route) ?: $this->config->get($this->config_path . 'route');
+        return $this->redirect_route ?: $this->config->get($this->config_path . 'route');
     }
 
     /**
@@ -188,14 +143,14 @@ abstract class Filter
     /**
      * Handle an incoming request.
      *
-     * @param Request $request        Request
-     * @param Closure $next           Closure
-     * @param string  $filter_string  string
-     * @param string  $redirect_route string
+     * @param Request     $request        Request
+     * @param Closure     $next           Closure
+     * @param string|null $filter_string  Filter in string format
+     * @param string|null $redirect_route Named route to redirect blocked client
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $filter_string, $redirect_route = null)
+    public function handle(Request $request, Closure $next, $filter_string = null, $redirect_route = null)
     {
         $this->redirect_route = $redirect_route;
 
@@ -210,9 +165,9 @@ abstract class Filter
      *
      * @return bool
      */
-    private function haveRulesForDevice()
+    protected function haveRulesForDevice()
     {
-        return array_key_exists($this->client->device->family, $this->rules);
+        return array_key_exists($this->client->device->family, $this->getRules());
     }
 
     /**
@@ -220,21 +175,22 @@ abstract class Filter
      *
      * @return bool
      */
-    private function haveVersionsForBrowser()
+    protected function haveVersionsForBrowser()
     {
-        return array_key_exists($this->client->device->family, $this->rules) &&
-               array_key_exists($this->client->ua->family, $this->rules[$this->client->device->family]);
+        return array_key_exists($this->client->device->family, $this->getRules()) &&
+               array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
     }
 
     /**
-     * Loop through all of the filters in the string and process them.
+     * Delegate setting the rules from the passed in filter string.
      *
-     * @param string $filter_string The filters separated by ';'
+     * The the filter string will always be null on the stack filter.
+     *
+     * @param string $filter_string The filter(s)
+     *
+     * @return void
      */
-    public function parseFilterString($filter_string)
-    {
-        array_map([$this, 'extractRule'], array_filter(explode(';', $filter_string)));
-    }
+    abstract public function parseFilterString($filter_string);
 
     /**
      * Delegate the processing of the filter to classes that know the logic that they need to preform.

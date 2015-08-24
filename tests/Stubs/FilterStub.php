@@ -24,8 +24,8 @@ class FilterStub extends Filter
     /**
      * @inheritDoc
      */
-    function process(Request $request, Closure $next, array $filter)
+    function process(Request $request, Closure $next)
     {
-        // TODO: Implement process() method.
+        return "Stub";
     }
 }

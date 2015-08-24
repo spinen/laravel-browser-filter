@@ -140,7 +140,7 @@ class FilterTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_the_value_from_the_implimenting_class_process_method()
+    public function it_returns_the_value_from_the_implementing_class_process_method()
     {
         // In the stub, the process, method just returns "Stub"
         $this->assertEquals('Stub', $this->filter->handle($this->request_mock, $this->returnGiven()));

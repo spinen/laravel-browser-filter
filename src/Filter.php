@@ -8,7 +8,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
-use Spinen\BrowserFilter\Support\DecipherRules;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
@@ -18,8 +17,6 @@ use Spinen\BrowserFilter\Support\ParserCreator;
  */
 abstract class Filter
 {
-    use DecipherRules;
-
     /**
      * The cache repository instance.
      *
@@ -100,6 +97,21 @@ abstract class Filter
     }
 
     /**
+     * Determines if the client needs to be redirected.
+     *
+     * @return \Illuminate\Http\RedirectResponse|bool
+     */
+    protected function determineRedirect()
+    {
+        // TODO: Need to put test in here about if this is a block or allow
+        if ($this->isBlocked()) {
+            return $this->redirector->route($this->getRedirectRoute());
+        }
+
+        return false;
+    }
+
+    /**
      * Get the browsers being filtered.
      *
      * @return string|array
@@ -154,6 +166,10 @@ abstract class Filter
     {
         $this->redirect_route = $redirect_route;
 
+        if ($this->onRedirectPath($request)) {
+            return $next($request);
+        }
+
         $this->parseFilterString($filter_string);
 
         // Delegate to the class that is extending this class, as to it knows what to do
@@ -179,6 +195,74 @@ abstract class Filter
     {
         return array_key_exists($this->client->device->family, $this->getRules()) &&
                array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
+    }
+
+    /**
+     * Checks to see if the browser/client is blocked.
+     *
+     * @return bool
+     */
+    protected function isBlocked()
+    {
+        return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
+    }
+
+    /**
+     * Checks to see if all versions of the browser is blocked.
+     *
+     * @return bool
+     */
+    private function isBlockedBrowser()
+    {
+        return $this->getBlockedBrowserVersions() === '*';
+    }
+
+    /**
+     * Checks to see if the version of the browser is blocked.
+     *
+     * Uses the php version_compare function to decide if there is a match.
+     *
+     * @link http://php.net/manual/en/function.version-compare.php
+     *
+     * @return bool
+     */
+    private function isBlockedBrowserVersion()
+    {
+        $denied = false;
+
+        // cache it, so that we don't have to keep asking for it
+        $client_version = $this->client->ua->toVersion();
+
+        foreach ((array)$this->getBlockedBrowserVersions() as $operator => $version) {
+            $denied |= (bool)version_compare($client_version, $version, $operator);
+        }
+
+        return $denied;
+    }
+
+    /**
+     * Checks to see if all browsers of the device family is blocked.
+     *
+     * @return bool
+     */
+    private function isBlockedDevice()
+    {
+        return $this->getBlockedBrowsers() === '*';
+    }
+
+    /**
+     * Check to see if we are on the redirect page.
+     *
+     * If we did not test for this, then we would get into a redirect loop.
+     *
+     * @param Request $request Request
+     *
+     * @return bool
+     */
+    protected function onRedirectPath(Request $request)
+    {
+        // TODO: Move this to session flash data
+        return $request->path() === $this->getRedirectRoute();
     }
 
     /**

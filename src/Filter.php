@@ -284,5 +284,5 @@ abstract class Filter
      *
      * @return mixed
      */
-    abstract function process(Request $request, Closure $next);
+    abstract protected function process(Request $request, Closure $next);
 }

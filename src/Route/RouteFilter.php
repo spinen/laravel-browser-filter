@@ -2,7 +2,11 @@
 
 namespace Spinen\BrowserFilter\Route;
 
-trait StringFilterParser
+use Closure;
+use Illuminate\Http\Request;
+use Spinen\BrowserFilter\Filter;
+
+abstract class RouteFilter extends Filter
 {
     /**
      * Loop through all of the parameters in the string and process them.
@@ -89,5 +93,19 @@ trait StringFilterParser
         array_map([$this, 'extractRule'], array_filter(explode(';', $filter_string)));
 
         $this->cache->put($cache_key, $this->rules, $this->getCacheTimeout());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function process(Request $request, Closure $next)
+    {
+        $redirect = $this->determineRedirect();
+
+        if ($redirect) {
+            return $redirect;
+        }
+
+        return $next($request);
     }
 }

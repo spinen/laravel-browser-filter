@@ -30,16 +30,6 @@ class Filter extends CoreFilter
     }
 
     /**
-     * Get the timeout of the cached value.
-     *
-     * @return mixed
-     */
-    protected function getCacheTimeout()
-    {
-        return $this->config->get($this->config_path . 'timeout');
-    }
-
-    /**
      * @inheritDoc
      */
     public function parseFilterString($filter_string)

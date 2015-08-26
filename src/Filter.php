@@ -139,6 +139,16 @@ abstract class Filter
     }
 
     /**
+     * Get the timeout of the cached value.
+     *
+     * @return mixed
+     */
+    protected function getCacheTimeout()
+    {
+        return $this->config->get($this->config_path . 'timeout');
+    }
+
+    /**
      * Get the route to the redirect path.
      *
      * @return string|null

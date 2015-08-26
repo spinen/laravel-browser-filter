@@ -60,13 +60,34 @@ trait StringFilterParser
         return $versions;
     }
 
+    private function generateFilterStringCacheKey($filter_string)
+    {
+        return 'filter_string:' . md5($filter_string);
+    }
+
     /**
      * Loop through all of the filters in the string and process them.
      *
      * @param string $filter_string The filters separated by ';'
+     *
+     * @return void
      */
     public function parseFilterString($filter_string)
     {
+        if (empty($filter_string)) {
+            return;
+        }
+
+        $cache_key = $this->generateFilterStringCacheKey($filter_string);
+
+        $this->rules = $this->cache->get($cache_key, []);
+
+        if ($this->rules) {
+            return;
+        }
+
         array_map([$this, 'extractRule'], array_filter(explode(';', $filter_string)));
+
+        $this->cache->put($cache_key, $this->rules, $this->getCacheTimeout());
     }
 }

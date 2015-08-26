@@ -106,15 +106,27 @@ abstract class Filter
     /**
      * Determines if the client needs to be redirected.
      *
-     * @return \Illuminate\Http\RedirectResponse|bool
+     * @return string|bool
      */
     protected function determineRedirect()
     {
         if ($this->needsRedirecting()) {
-            return $this->redirector->route($this->getRedirectRoute());
+            return $this->getRedirectRoute();
         }
 
         return false;
+    }
+
+    /**
+     * Generate the key to use to cache the determination.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function generateCacheKey(Request $request)
+    {
+        return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
     /**
@@ -186,10 +198,23 @@ abstract class Filter
             return $next($request);
         }
 
-        $this->parseFilterString($filter_string);
+        $cache_key = $this->generateCacheKey($request);
 
-        // Delegate to the class that is extending this class, as to it knows what to do
-        return $this->process($request, $next);
+        $redirect = $this->cache->get($cache_key);
+
+        if (is_null($redirect)) {
+            $this->parseFilterString($filter_string);
+
+            $redirect = $this->determineRedirect();
+
+            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
+        }
+
+        if ($redirect) {
+            return $this->redirector->route($redirect);
+        }
+
+        return $next($request);
     }
 
     /**
@@ -309,14 +334,4 @@ abstract class Filter
      * @return void
      */
     abstract public function parseFilterString($filter_string);
-
-    /**
-     * Delegate the processing of the filter to classes that know the logic that they need to preform.
-     *
-     * @param Request $request Request
-     * @param Closure $next    Closure
-     *
-     * @return mixed
-     */
-    abstract protected function process(Request $request, Closure $next);
 }

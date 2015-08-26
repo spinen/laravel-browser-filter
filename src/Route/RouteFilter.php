@@ -2,7 +2,6 @@
 
 namespace Spinen\BrowserFilter\Route;
 
-use Closure;
 use Illuminate\Http\Request;
 use Spinen\BrowserFilter\Filter;
 
@@ -64,6 +63,25 @@ abstract class RouteFilter extends Filter
         return $versions;
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function generateCacheKey(Request $request)
+    {
+        return md5($request->path()) .
+               ':' .
+               ($this->blockFilter ? 'block' : 'allow') .
+               ':' .
+               parent::generateCacheKey($request);
+    }
+
+    /**
+     * Generate the key to use to cache the processed filter string into an array.
+     *
+     * @param string $filter_string The filters separated by ';'
+     *
+     * @return string
+     */
     private function generateFilterStringCacheKey($filter_string)
     {
         return 'filter_string:' . md5($filter_string);
@@ -93,19 +111,5 @@ abstract class RouteFilter extends Filter
         array_map([$this, 'extractRule'], array_filter(explode(';', $filter_string)));
 
         $this->cache->put($cache_key, $this->rules, $this->getCacheTimeout());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function process(Request $request, Closure $next)
-    {
-        $redirect = $this->determineRedirect();
-
-        if ($redirect) {
-            return $redirect;
-        }
-
-        return $next($request);
     }
 }

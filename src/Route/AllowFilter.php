@@ -18,13 +18,19 @@ class AllowFilter extends Filter
     /**
      * @inheritDoc
      */
+    protected $blockFilter = false;
+
+    /**
+     * @inheritDoc
+     */
     protected function process(Request $request, Closure $next)
     {
-        // TODO: This is just slimed in to make it work
-        if ($this->isBlocked()) {
-            return $next($request);
+        $redirect = $this->determineRedirect();
+
+        if ($redirect) {
+            return $redirect;
         }
 
-        return $this->redirector->route($this->getRedirectRoute());
+        return $next($request);
     }
 }

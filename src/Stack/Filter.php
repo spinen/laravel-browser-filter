@@ -15,6 +15,11 @@ use Spinen\BrowserFilter\Support\ParserCreator;
 class Filter extends CoreFilter
 {
     /**
+     * @inheritDoc
+     */
+    protected $blockFilter = true;
+
+    /**
      * Generate the key to use to cache the determination.
      *
      * @return string
@@ -39,6 +44,7 @@ class Filter extends CoreFilter
      */
     public function parseFilterString($filter_string)
     {
+        // TODO: Check for allowed or blocked
         $this->rules = $this->config->get($this->config_path . 'blocked', []);
     }
 
@@ -52,7 +58,7 @@ class Filter extends CoreFilter
         $redirect = $this->cache->get($cache_key);
 
         if (is_null($redirect)) {
-            $redirect = $this->determineRedirect($cache_key);
+            $redirect = $this->determineRedirect();
 
             $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
         }

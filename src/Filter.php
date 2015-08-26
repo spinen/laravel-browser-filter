@@ -18,6 +18,13 @@ use Spinen\BrowserFilter\Support\ParserCreator;
 abstract class Filter
 {
     /**
+     * Is this a block or allow filter?
+     *
+     * @var bool
+     */
+    protected $blockFilter = null;
+
+    /**
      * The cache repository instance.
      *
      * @var Cache
@@ -103,8 +110,7 @@ abstract class Filter
      */
     protected function determineRedirect()
     {
-        // TODO: Need to put test in here about if this is a block or allow
-        if ($this->isBlocked()) {
+        if ($this->needsRedirecting()) {
             return $this->redirector->route($this->getRedirectRoute());
         }
 
@@ -116,7 +122,7 @@ abstract class Filter
      *
      * @return string|array
      */
-    public function getBlockedBrowsers()
+    public function getBrowsers()
     {
         return ($this->haveRulesForDevice()) ? $this->getRules()[$this->client->device->family] : null;
     }
@@ -126,7 +132,7 @@ abstract class Filter
      *
      * @return string|array
      */
-    public function getBlockedBrowserVersions()
+    public function getBrowserVersions()
     {
         return ($this->haveVersionsForBrowser())
             ? $this->getRules()[$this->client->device->family][$this->client->ua->family] : null;
@@ -202,9 +208,9 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function isBlocked()
+    protected function isMatched()
     {
-        return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
+        return $this->isMatchedDevice() || $this->isMatchedBrowser() || $this->isMatchedBrowserVersion();
     }
 
     /**
@@ -212,9 +218,9 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isBlockedBrowser()
+    private function isMatchedBrowser()
     {
-        return $this->getBlockedBrowserVersions() === '*';
+        return '*' === $this->getBrowserVersions();
     }
 
     /**
@@ -226,14 +232,14 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isBlockedBrowserVersion()
+    private function isMatchedBrowserVersion()
     {
         $denied = false;
 
         // cache it, so that we don't have to keep asking for it
         $client_version = $this->client->ua->toVersion();
 
-        foreach ((array)$this->getBlockedBrowserVersions() as $operator => $version) {
+        foreach ((array)$this->getBrowserVersions() as $operator => $version) {
             $denied |= (bool)version_compare($client_version, $version, $operator);
         }
 
@@ -245,9 +251,27 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isBlockedDevice()
+    private function isMatchedDevice()
     {
-        return $this->getBlockedBrowsers() === '*';
+        return '*' === $this->getBrowsers();
+    }
+
+    /**
+     * Decide if the client needs to be redirected.
+     *
+     * Here is the logic:
+     *
+     *   blockedFilter  true       true    false   false
+     *   isMatched()    true       false   true    false
+     *                  redirect   no      no      redirect
+     *
+     * so you can see this is a negative xor
+     *
+     * @return bool
+     */
+    protected function needsRedirecting()
+    {
+        return !$this->blockFilter xor $this->isMatched();
     }
 
     /**

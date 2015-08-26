@@ -18,11 +18,17 @@ class BlockFilter extends Filter
     /**
      * @inheritDoc
      */
+    protected $blockFilter = true;
+
+    /**
+     * @inheritDoc
+     */
     protected function process(Request $request, Closure $next)
     {
-        // TODO: This is just slimed in to make it work
-        if ($this->isBlocked()) {
-            return $this->redirector->route($this->getRedirectRoute());
+        $redirect = $this->determineRedirect();
+
+        if ($redirect) {
+            return $redirect;
         }
 
         return $next($request);

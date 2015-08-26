@@ -3,7 +3,6 @@
 namespace Spinen\BrowserFilter\Stack;
 
 use Spinen\BrowserFilter\Filter as CoreFilter;
-use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
  * Class Filter

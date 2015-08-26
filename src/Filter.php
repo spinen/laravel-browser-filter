@@ -126,6 +126,7 @@ abstract class Filter
      */
     protected function generateCacheKey(Request $request)
     {
+        // NOTE: $request is an unused variable here, but needed in a class that extends this one
         return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
@@ -136,7 +137,7 @@ abstract class Filter
      */
     public function getBrowsers()
     {
-        return ($this->haveRulesForDevice()) ? $this->getRules()[$this->client->device->family] : null;
+        return $this->haveRulesForDevice() ? $this->getRules()[$this->client->device->family] : null;
     }
 
     /**
@@ -146,7 +147,7 @@ abstract class Filter
      */
     public function getBrowserVersions()
     {
-        return ($this->haveVersionsForBrowser())
+        return $this->haveVersionsForBrowser()
             ? $this->getRules()[$this->client->device->family][$this->client->ua->family] : null;
     }
 

@@ -2,6 +2,8 @@
 
 namespace Tests\Spinen\BrowserFilter;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Mockery;
 use Tests\Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 
@@ -96,7 +98,7 @@ class FilterTest extends FilterCase
                     '<=' => '3',
                     '>'  => '4',
                 ],
-                'Other'  => '*',
+                'Other'   => '*',
             ],
         ];
 
@@ -127,7 +129,7 @@ class FilterTest extends FilterCase
                     '<=' => '3',
                     '>'  => '4',
                 ],
-                'Other'  => '*',
+                'Other'   => '*',
             ],
         ];
 
@@ -207,45 +209,317 @@ class FilterTest extends FilterCase
     /**
      * @test
      */
-    /*public function it_returns_the_value_from_the_implementing_class_process_method()
+    public function it_returns_the_result_from_the_next_filter_when_on_the_redirect_path()
     {
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('route');
+
+        $this->assertEquals($this->request_mock, $this->filter->handle($this->request_mock, $this->returnGiven()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_result_from_the_next_filter_when_client_is_not_blocked_and_caches_the_result()
+    {
+        $this->filter->setBlockFilter(true);
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             'Device:Browser:1.2.3',
+                             false,
+                             'x',
+                         ])
+                         ->andReturnNull();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->twice()
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn('x');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('other_route');
+
+        $response = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $response);
+
+        $this->assertEquals($this->request_mock, $response);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_result_from_the_next_filter_when_the_results_are_cached_as_not_blocked()
+    {
+        $this->filter->setBlockFilter(true);
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturn(false);
+
+        $this->cache_mock->shouldReceive('put')
+                         ->never()
+                         ->withAnyArgs();
+
         $this->client_ua_mock->shouldReceive('toVersion')
                              ->once()
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.timeout');
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('other_route');
+
+        $response = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(Request::class, $response);
+
+        $this->assertEquals($this->request_mock, $response);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_redirect_from_the_filter_when_client_is_blocked_and_caches_the_result()
+    {
+        $this->filter->setBlockFilter(false);
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
         $this->cache_mock->shouldReceive('get')
                          ->once()
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->once()
+                         ->withArgs([
+                             'Device:Browser:1.2.3',
+                             'route',
+                             'x',
+                         ])
+                         ->andReturnNull();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->twice()
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
+
+        $this->config_mock->shouldReceive('get')
+                          ->twice()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.timeout')
+                          ->andReturn('x');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with('route')
+                              ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('other_route');
+
+        $response = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+
+        $this->assertEquals($this->redirect_response_mock, $response);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_redirect_when_the_client_is_cached_as_not_blocked()
+    {
+        $this->filter->setBlockFilter(false);
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->cache_mock->shouldReceive('get')
+                         ->once()
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturn('route');
+
+        $this->cache_mock->shouldReceive('put')
+                         ->never()
+                         ->withAnyArgs();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.timeout');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with('route')
+                              ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->once()
+                           ->withNoArgs()
+                           ->andReturn('other_route');
+
+        $response = $this->filter->handle($this->request_mock, $this->returnGiven());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+
+        $this->assertEquals($this->redirect_response_mock, $response);
+    }
+
+    /**
+     * @test
+     */
+    public function it_parses_the_third_parameter_and_causes_the_rules_to_be_set()
+    {
+        $this->filter->setBlockFilter(true);
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->cache_mock->shouldReceive('get')
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
                          ->withAnyArgs()
                          ->andReturnNull();
 
-        // In the stub, the process, method just returns "Stub"
-        $this->assertEquals('Stub', $this->filter->handle($this->request_mock, $this->returnGiven()));
-    }*/
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
 
-    /**
-     * @test
-     */
-    /*public function it_parses_the_third_parameter_and_causes_the_rules_to_be_set()
-    {
-        $rules = 'The rules';
+        $this->config_mock->shouldReceive('get')
+                          ->with('browserfilter.route')
+                          ->andReturn('route');
 
-        $this->filter->handle($this->request_mock, $this->returnGiven(), $rules);
+        $this->config_mock->shouldReceive('get')
+                          ->with('browserfilter.timeout')
+                          ->andReturn('x');
+
+        $this->request_mock->shouldReceive('path')
+                           ->withNoArgs()
+                           ->andReturn('other_route');
+
+        $filter_string = 'Device,Other';
+
+        $rules = [
+            'Device',
+            'Other',
+        ];
+
+        $this->filter->handle($this->request_mock, $this->returnGiven(), $filter_string);
 
         $this->assertEquals($rules, $this->filter->getRules());
-    }*/
+    }
 
     /**
      * @test
      */
-    /*public function it_parses_the_fourth_parameter_and_causes_the_redirect_route_to_be_set()
+    public function it_parses_the_fourth_parameter_and_causes_the_redirect_route_to_be_set()
     {
-        $redirect = 'The redirect';
+        $this->filter->setBlockFilter(false);
+
+        $redirect = 'some_route';
+
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->cache_mock->shouldReceive('get')
+                         ->with('Device:Browser:1.2.3')
+                         ->andReturnNull();
+
+        $this->cache_mock->shouldReceive('put')
+                         ->withAnyArgs()
+                         ->andReturnNull();
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
+
+        $this->config_mock->shouldReceive('get')
+                          ->never()
+                          ->with('browserfilter.route');
+
+        $this->config_mock->shouldReceive('get')
+                          ->with('browserfilter.timeout')
+                          ->andReturn('x');
+
+        $this->redirector_mock->shouldReceive('route')
+                              ->once()
+                              ->with($redirect)
+                              ->andReturn($this->redirect_response_mock);
+
+        $this->request_mock->shouldReceive('path')
+                           ->withNoArgs()
+                           ->andReturn('other_route');
 
         $this->filter->handle($this->request_mock, $this->returnGiven(), null, $redirect);
 
         $this->assertEquals($redirect, $this->filter->getRedirectRoute());
-    }*/
+    }
 
     /**
      * @test
@@ -328,7 +602,7 @@ class FilterTest extends FilterCase
         $rules = [
             'Device' => [
                 'Browser' => '*',
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -358,7 +632,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '==' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -377,7 +651,7 @@ class FilterTest extends FilterCase
         $rules = [
             'Device' => [
                 'Browser' => '*',
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -406,7 +680,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '=' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -418,7 +692,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '==' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -430,7 +704,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'eq' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -442,7 +716,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '=' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -454,7 +728,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '==' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -466,7 +740,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'eq' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -492,7 +766,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '>' => '1.2.2',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -504,7 +778,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'gt' => '1.2.2',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -516,7 +790,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '>' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -528,7 +802,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'gt' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -555,7 +829,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '>=' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -567,7 +841,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'ge' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -579,7 +853,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '>=' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -591,7 +865,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'ge' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -617,7 +891,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -629,7 +903,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'lt' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -641,7 +915,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -653,7 +927,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'lt' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -679,7 +953,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<=' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -691,7 +965,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'le' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -703,7 +977,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<=' => '1.2.2',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -715,7 +989,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'le' => '1.2.2',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -741,7 +1015,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '!=' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -753,7 +1027,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<>' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -765,7 +1039,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'ne' => '1.2.4',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -777,7 +1051,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '!=' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -789,7 +1063,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     '<>' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -801,7 +1075,7 @@ class FilterTest extends FilterCase
                 'Browser' => [
                     'ne' => '1.2.3',
                 ],
-            ]
+            ],
         ];
 
         $this->filter->setRules($rules);
@@ -867,7 +1141,7 @@ class FilterTest extends FilterCase
             'Device' => [
                 'Browser' => [
                     '==' => '1.2.3',
-                ]
+                ],
             ],
         ];
 
@@ -917,7 +1191,7 @@ class FilterTest extends FilterCase
             'Device' => [
                 'Browser' => [
                     '==' => '1.2.3',
-                ]
+                ],
             ],
         ];
 

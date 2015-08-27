@@ -1,13 +1,13 @@
 <?php
 
-namespace Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter\Support;
 
 use UAParser\Parser;
 
 /**
  * Class ParserCreator
  *
- * @package Spinen\BrowserFilter
+ * @package Spinen\BrowserFilter\Support
  */
 class ParserCreator
 {

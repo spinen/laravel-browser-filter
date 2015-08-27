@@ -8,14 +8,23 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
+use Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException;
+use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
  * Class Filter
  *
- * @package Spinen\BrowserFilter
+ * @package Spinen\BrowserFilter\Route
  */
-class Filter
+abstract class Filter
 {
+    /**
+     * Is this a block or allow filter?
+     *
+     * @var bool
+     */
+    protected $block_filter = null;
+
     /**
      * The cache repository instance.
      *
@@ -52,11 +61,25 @@ class Filter
     protected $detector;
 
     /**
+     * The path to redirect the user if client is blocked.
+     *
+     * @var string
+     */
+    protected $redirect_route;
+
+    /**
      * The redirector instance.
      *
      * @var Redirector
      */
     protected $redirector;
+
+    /**
+     * The array of rules
+     *
+     * @var array
+     */
+    protected $rules = [];
 
     /**
      * Create a new browser filter middleware instance.
@@ -82,12 +105,29 @@ class Filter
     }
 
     /**
+     * Determines if the client needs to be redirected.
+     *
+     * @return string|bool
+     */
+    public function determineRedirect()
+    {
+        if ($this->needsRedirecting()) {
+            return $this->getRedirectRoute();
+        }
+
+        return false;
+    }
+
+    /**
      * Generate the key to use to cache the determination.
+     *
+     * @param Request $request
      *
      * @return string
      */
-    private function generateCacheKey()
+    public function generateCacheKey(Request $request)
     {
+        // NOTE: $request is an unused variable here, but needed in a class that extends this one
         return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
@@ -96,9 +136,9 @@ class Filter
      *
      * @return string|array
      */
-    private function getBlockedBrowsers()
+    public function getBrowsers()
     {
-        return $this->config->get($this->config_path . 'blocked.' . $this->client->device->family);
+        return $this->haveRulesForDevice() ? $this->getRules()[$this->client->device->family] : null;
     }
 
     /**
@@ -106,13 +146,10 @@ class Filter
      *
      * @return string|array
      */
-    private function getBlockedBrowserVersions()
+    public function getBrowserVersions()
     {
-        return $this->config->get($this->config_path .
-                                  'blocked.' .
-                                  $this->client->device->family .
-                                  '.' .
-                                  $this->client->ua->family);
+        return $this->haveVersionsForBrowser()
+            ? $this->getRules()[$this->client->device->family][$this->client->ua->family] : null;
     }
 
     /**
@@ -120,9 +157,25 @@ class Filter
      *
      * @return mixed
      */
-    private function getCacheTimeout()
+    public function getCacheTimeout()
     {
         return $this->config->get($this->config_path . 'timeout');
+    }
+
+    /**
+     * Return the filter type.
+     *
+     * @return string
+     *
+     * @throws FilterTypeNotSetException
+     */
+    public function getFilterType()
+    {
+        if (is_bool($this->block_filter)) {
+            return $this->block_filter ? 'block' : 'allow';
+        }
+
+        throw new FilterTypeNotSetException();
     }
 
     /**
@@ -130,60 +183,79 @@ class Filter
      *
      * @return string|null
      */
-    private function getRedirectRoute()
+    public function getRedirectRoute()
     {
-        return $this->config->get($this->config_path . 'route');
+        return $this->redirect_route ?: $this->config->get($this->config_path . 'route');
+    }
+
+    /**
+     * Return the array of rules.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        return $this->rules;
     }
 
     /**
      * Handle an incoming request.
      *
-     * @param Request $request Request
-     * @param Closure $next    Closure
+     * @param Request     $request        Request
+     * @param Closure     $next           Closure
+     * @param string|null $filter_string  Filter in string format
+     * @param string|null $redirect_route Named route to redirect blocked client
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $filter_string = null, $redirect_route = null)
     {
+        $this->redirect_route = $redirect_route;
+
         if ($this->onRedirectPath($request)) {
             return $next($request);
         }
 
-        $cache_key = $this->generateCacheKey();
+        $cache_key = $this->generateCacheKey($request);
 
         $redirect = $this->cache->get($cache_key);
 
         if (is_null($redirect)) {
-            $redirect = $this->determineRedirect($cache_key);
+            $this->parseFilterString($filter_string);
+
+            // TODO: Put rule validator here
+
+            $redirect = $this->determineRedirect();
+
+            $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
         }
 
         if ($redirect) {
-            return $redirect;
+            return $this->redirector->route($redirect);
         }
 
         return $next($request);
     }
 
     /**
-     * Determines if the client needs to be redirected.
+     * Check to see if there are defined rules for the device.
      *
-     * Caches the determination, so that next time the process of making the determination does not have to be reran.
-     *
-     * @param string $cache_key string
-     *
-     * @return \Illuminate\Http\RedirectResponse|bool
+     * @return bool
      */
-    private function determineRedirect($cache_key)
+    public function haveRulesForDevice()
     {
-        $redirect = false;
+        return array_key_exists($this->client->device->family, $this->getRules());
+    }
 
-        if ($this->isBlocked()) {
-            $redirect = $this->redirector->route($this->getRedirectRoute());
-        }
-
-        $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
-
-        return $redirect;
+    /**
+     * Check to see if there are defined versions for the browser for the device.
+     *
+     * @return bool
+     */
+    public function haveVersionsForBrowser()
+    {
+        return array_key_exists($this->client->device->family, $this->getRules()) &&
+               array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
     }
 
     /**
@@ -191,9 +263,9 @@ class Filter
      *
      * @return bool
      */
-    private function isBlocked()
+    public function isMatched()
     {
-        return $this->isBlockedDevice() || $this->isBlockedBrowser() || $this->isBlockedBrowserVersion();
+        return $this->isMatchedDevice() || $this->isMatchedBrowser() || $this->isMatchedBrowserVersion();
     }
 
     /**
@@ -201,9 +273,9 @@ class Filter
      *
      * @return bool
      */
-    private function isBlockedBrowser()
+    public function isMatchedBrowser()
     {
-        return $this->getBlockedBrowserVersions() === '*';
+        return '*' === $this->getBrowserVersions();
     }
 
     /**
@@ -215,18 +287,18 @@ class Filter
      *
      * @return bool
      */
-    private function isBlockedBrowserVersion()
+    public function isMatchedBrowserVersion()
     {
         $denied = false;
 
         // cache it, so that we don't have to keep asking for it
         $client_version = $this->client->ua->toVersion();
 
-        foreach ((array)$this->getBlockedBrowserVersions() as $operator => $version) {
+        foreach ((array)$this->getBrowserVersions() as $operator => $version) {
             $denied |= (bool)version_compare($client_version, $version, $operator);
         }
 
-        return $denied;
+        return (bool)$denied;
     }
 
     /**
@@ -234,9 +306,27 @@ class Filter
      *
      * @return bool
      */
-    private function isBlockedDevice()
+    public function isMatchedDevice()
     {
-        return $this->getBlockedBrowsers() === '*';
+        return '*' === $this->getBrowsers();
+    }
+
+    /**
+     * Decide if the client needs to be redirected.
+     *
+     * Here is the logic:
+     *
+     *   blockedFilter  true       true    false   false
+     *   isMatched()    true       false   true    false
+     *                  redirect   no      no      redirect
+     *
+     * so you can see this is a negative xor
+     *
+     * @return bool
+     */
+    public function needsRedirecting()
+    {
+        return !$this->block_filter xor $this->isMatched();
     }
 
     /**
@@ -248,8 +338,20 @@ class Filter
      *
      * @return bool
      */
-    private function onRedirectPath(Request $request)
+    public function onRedirectPath(Request $request)
     {
+        // TODO: Move this to session flash data
         return $request->path() === $this->getRedirectRoute();
     }
+
+    /**
+     * Delegate setting the rules from the passed in filter string.
+     *
+     * The the filter string will always be null on the stack filter.
+     *
+     * @param string $filter_string The filter(s)
+     *
+     * @return void
+     */
+    abstract public function parseFilterString($filter_string);
 }

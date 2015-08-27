@@ -43,12 +43,12 @@ Publish the package config file to `config/browserfilter.php`:
 $ php artisan vendor:publish
 ```
 
-Register the HTTP Middleware in file `app/Http/Kernel.php`:
+Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
 
 ```php
     protected $middleware = [
         // ..
-        \Spinen\BrowserFilter\Filter::class,
+        \Spinen\BrowserFilter\Stack\Filter::class,
 ```
 
 Build a page with named route to redirect blocked browsers to:

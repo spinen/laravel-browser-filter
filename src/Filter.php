@@ -8,6 +8,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
+use Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
@@ -165,10 +166,16 @@ abstract class Filter
      * Return the filter type.
      *
      * @return string
+     *
+     * @throws FilterTypeNotSetException
      */
     public function getFilterType()
     {
-        return $this->block_filter ? 'block' : 'allow';
+        if (is_bool($this->block_filter)) {
+            return $this->block_filter ? 'block' : 'allow';
+        }
+
+        throw new FilterTypeNotSetException();
     }
 
     /**

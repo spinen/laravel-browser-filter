@@ -181,6 +181,16 @@ class FilterTest extends FilterCase
 
     /**
      * @test
+     *
+     * @expectedException \Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException
+     */
+    public function it_raises_exception_when_the_filter_type_has_not_been_set()
+    {
+        $this->filter->getFilterType();
+    }
+
+    /**
+     * @test
      */
     public function it_uses_the_configuration_redirect_route_as_the_default()
     {

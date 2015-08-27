@@ -73,11 +73,12 @@ Build a page with named route to redirect blocked browsers to:
 
 During the install process `config/browserfilter.php` as copied to the project.  That file is fully documented, so please read it to know how to configure the middleware.
 
-There are 3 top level items that you can configure...
+There are 4 top level items that you can configure...
 
-1. blocked - The array of devices/browsers/versions to block for *ALL* http request
-2. route - The name of the route to redirect the user if they are using a blocked client
-3. timeout - The length of time to cache the client
+1. type - The type of filtering strategy to apply to the stack filter
+2. rules - The array of devices/browsers/versions to allow/block for *ALL* http request
+3. route - The name of the route to redirect the user if they are using a blocked client
+4. timeout - The length of time to cache the client
 
 ## Using the Route middleware
 

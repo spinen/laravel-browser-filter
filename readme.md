@@ -43,12 +43,21 @@ Publish the package config file to `config/browserfilter.php`:
 $ php artisan vendor:publish
 ```
 
-Register the HTTP Middleware in file `app/Http/Kernel.php`:
+Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
 
 ```php
     protected $middleware = [
         // ..
-        \Spinen\BrowserFilter\Filter::class,
+        \Spinen\BrowserFilter\Stack\Filter::class,
+```
+
+Register the Route Middlewares in file `app/Http/Kernel.php`:
+
+```php
+    protected $routeMiddleware = [
+        // ..
+        'allowBrowser' => \Spinen\BrowserFilter\Route\AllowFilter::class,
+        'blockBrowser' => \Spinen\BrowserFilter\Route\BlockFilter::class,
 ```
 
 Build a page with named route to redirect blocked browsers to:
@@ -66,6 +75,49 @@ During the install process `config/browserfilter.php` as copied to the project. 
 
 There are 3 top level items that you can configure...
 
-1. blocked - The array of devices/browsers/versions to block
+1. blocked - The array of devices/browsers/versions to block for *ALL* http request
 2. route - The name of the route to redirect the user if they are using a blocked client
 3. timeout - The length of time to cache the client
+
+## Using the Route middleware
+
+The route middleware using the same configuration file as the stack middleware, but ignores the rules.
+
+The rules are passed in after the ':' behind the router filter that you wish to use...
+
+```php
+    Route::get('tablet_page', [
+        'middleware' => 'allowBrowser:Tablet',
+        'uses'       => function () {
+            return "Special page that is only accessible to tablets";
+        }
+    ]);
+```
+
+or 
+
+```php
+    Route::get('ie_is_blocked_page', [
+        'middleware' => 'blockBrowser:Other/Ie',
+        'uses'       => function () {
+            return "Special page that is only accessible to non IE browsers on Desktops";
+        }
+    ]);
+```
+
+The format of the filter is `Device/Browser/operatorVersion|operatorVersion2;Device/Browser2/operatorVersion`, so the following rule:
+
+```php
+    $rule = [
+        'Mobile' => '*',
+        'Other' => [
+            'Ie' => [
+                '<' => '10',
+                '>' => '13',
+            ],
+        ],
+        'Tablet' => '*',
+    ]
+```
+
+would be written as `Mobile;Other/Ie/<10|>13;Tablet`.

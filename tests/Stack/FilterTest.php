@@ -33,15 +33,65 @@ class FilterTest extends FilterCase
     /**
      * @test
      */
-    public function it_sets_the_filter_type_to_block()
+    public function it_reads_the_allow_filter_type_from_the_configs()
     {
-        $this->assertEquals('block', $this->filter->getFilterType());
+        $this->config_mock->shouldReceive('get')
+                          ->withArgs(['browserfilter.rules', []])
+                          ->andReturn([]);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('type')
+                          ->andReturn('allow');
+
+        $this->filter->parseFilterString(null);
+
+        $this->assertEquals('allow', $this->filter->getFilterType());
     }
 
     /**
      * @test
      */
-    public function it_parses_the_rules()
+    public function it_reads_the_block_filter_type_from_the_configs()
+    {
+        $this->config_mock->shouldReceive('get')
+                          ->withArgs(['browserfilter.rules', []])
+                          ->andReturn([]);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('type')
+                          ->andReturn('block');
+
+        $this->filter->parseFilterString(null);
+
+        $this->assertEquals('block', $this->filter->getFilterType());
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException
+     */
+    public function it_raises_exception_to_invalid_filter_type_in_configs()
+    {
+        $this->config_mock->shouldReceive('get')
+                          ->withArgs(['browserfilter.rules', []])
+                          ->andReturn([]);
+
+        $this->config_mock->shouldReceive('get')
+                          ->once()
+                          ->with('type')
+                          ->andReturn('invalid');
+
+        $this->filter->parseFilterString(null);
+
+        $this->filter->getFilterType();
+    }
+
+    /**
+     * @test
+     */
+    public function it_reads_the_rules_from_the_configs()
     {
         $rules = [
             'Device' => [
@@ -51,8 +101,12 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->once()
-                          ->withArgs(['browserfilter.blocked', []])
+                          ->withArgs(['browserfilter.rules', []])
                           ->andReturn($rules);
+
+        $this->config_mock->shouldReceive('get')
+                          ->with('type')
+                          ->andReturn('allow');
 
         $this->filter->parseFilterString(null);
 

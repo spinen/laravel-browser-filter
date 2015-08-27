@@ -18,6 +18,11 @@ class FilterStub extends Filter
      */
     public function parseFilterString($filter_string)
     {
-        $this->rules = explode(',', $filter_string);
+        if (is_array($filter_string)) {
+            $this->rules = $filter_string;
+
+            return;
+        }
+        $this->rules = array_filter(explode(',', $filter_string));
     }
 }

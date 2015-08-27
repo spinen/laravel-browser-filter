@@ -18,7 +18,7 @@ class FilterStub extends Filter
      */
     public function parseFilterString($filter_string)
     {
-        return;
+        $this->rules = explode(',', $filter_string);
     }
 
     /**

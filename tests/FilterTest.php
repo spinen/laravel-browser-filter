@@ -50,9 +50,9 @@ class FilterTest extends FilterCase
             'Device' => '*',
         ];
 
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals('route', $this->filter->determineRedirect());
     }
@@ -67,7 +67,7 @@ class FilterTest extends FilterCase
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $this->assertEquals(false, $this->filter->determineRedirect());
     }
@@ -102,7 +102,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $device = 'Device';
         $this->client_device_mock->family = $device;
@@ -133,7 +133,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $device = 'Device';
         $ua = 'Browser';
@@ -187,7 +187,7 @@ class FilterTest extends FilterCase
                           ->never()
                           ->with('browserfilter.route');
 
-        $this->filter->setRedirectRoute('set_route');
+        $this->filter->setRedirectRouteForTest('set_route');
 
         $this->assertEquals('set_route', $this->filter->getRedirectRoute());
     }
@@ -201,7 +201,7 @@ class FilterTest extends FilterCase
             'Some' => 'Rule',
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals($rules, $this->filter->getRules());
     }
@@ -232,7 +232,7 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_result_from_the_next_filter_when_client_is_not_blocked_and_caches_the_result()
     {
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -283,7 +283,7 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_result_from_the_next_filter_when_the_results_are_cached_as_not_blocked()
     {
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -328,7 +328,7 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_redirect_from_the_filter_when_client_is_blocked_and_caches_the_result()
     {
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -384,7 +384,7 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_redirect_when_the_client_is_cached_as_not_blocked()
     {
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -434,7 +434,7 @@ class FilterTest extends FilterCase
      */
     public function it_parses_the_third_parameter_and_causes_the_rules_to_be_set()
     {
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -480,7 +480,7 @@ class FilterTest extends FilterCase
      */
     public function it_parses_the_fourth_parameter_and_causes_the_redirect_route_to_be_set()
     {
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
         $redirect = 'some_route';
 
@@ -530,7 +530,7 @@ class FilterTest extends FilterCase
             'Device' => '*',
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
 
@@ -552,7 +552,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
 
@@ -577,7 +577,7 @@ class FilterTest extends FilterCase
             'Device' => '*',
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -605,7 +605,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -635,7 +635,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -654,7 +654,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -683,7 +683,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -695,7 +695,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -707,7 +707,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -719,7 +719,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -731,7 +731,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -743,7 +743,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -769,7 +769,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -781,7 +781,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -793,7 +793,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -805,7 +805,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -832,7 +832,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -844,7 +844,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -856,7 +856,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -868,7 +868,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -894,7 +894,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -906,7 +906,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -918,7 +918,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -930,7 +930,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -956,7 +956,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -968,7 +968,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -980,7 +980,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -992,7 +992,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -1018,7 +1018,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -1030,7 +1030,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -1042,7 +1042,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->isMatchedBrowserVersion());
 
@@ -1054,7 +1054,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -1066,7 +1066,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
 
@@ -1078,7 +1078,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->isMatchedBrowserVersion());
     }
@@ -1092,7 +1092,7 @@ class FilterTest extends FilterCase
             'Device' => '*',
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
@@ -1113,11 +1113,11 @@ class FilterTest extends FilterCase
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $rules = [];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->needsRedirecting());
     }
@@ -1135,7 +1135,7 @@ class FilterTest extends FilterCase
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
-        $this->filter->setBlockFilter(true);
+        $this->filter->setFilterAsBlockFilter();
 
         $rules = [
             'Device' => [
@@ -1145,7 +1145,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->needsRedirecting());
     }
@@ -1163,11 +1163,11 @@ class FilterTest extends FilterCase
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
         $rules = [];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(true, $this->filter->needsRedirecting());
     }
@@ -1185,7 +1185,7 @@ class FilterTest extends FilterCase
                              ->withNoArgs()
                              ->andReturn('1.2.3');
 
-        $this->filter->setBlockFilter(false);
+        $this->filter->setFilterAsAllowFilter();
 
         $rules = [
             'Device' => [
@@ -1195,7 +1195,7 @@ class FilterTest extends FilterCase
             ],
         ];
 
-        $this->filter->setRules($rules);
+        $this->filter->setRulesForTest($rules);
 
         $this->assertEquals(false, $this->filter->needsRedirecting());
     }
@@ -1210,11 +1210,11 @@ class FilterTest extends FilterCase
                            ->withNoArgs()
                            ->andReturn('route');
 
-        $this->filter->setRedirectRoute('route');
+        $this->filter->setRedirectRouteForTest('route');
 
         $this->assertEquals(true, $this->filter->onRedirectPath($this->request_mock));
 
-        $this->filter->setRedirectRoute('other_route');
+        $this->filter->setRedirectRouteForTest('other_route');
 
         $this->assertEquals(false, $this->filter->onRedirectPath($this->request_mock));
     }

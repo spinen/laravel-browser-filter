@@ -30,15 +30,23 @@ class FilterStub extends Filter
     }
 
     /**
-     * Method in the stub to allow you to set the block_filter for testing.
-     *
-     * @param bool $block_filter Set type
+     * Method in the stub to allow you to set the filter to behave as a block filter.
      *
      * @return void
      */
-    public function setBlockFilter($block_filter)
+    public function setFilterAsBlockFilter()
     {
-        $this->block_filter = $block_filter;
+        $this->block_filter = true;
+    }
+
+    /**
+     * Method in the stub to allow you to set the filter to behave as an allow filter.
+     *
+     * @return void
+     */
+    public function setFilterAsAllowFilter()
+    {
+        $this->block_filter = false;
     }
 
     /**
@@ -48,7 +56,7 @@ class FilterStub extends Filter
      *
      * @return void
      */
-    public function setRedirectRoute($redirect_route)
+    public function setRedirectRouteForTest($redirect_route)
     {
         $this->redirect_route = $redirect_route;
     }
@@ -60,7 +68,7 @@ class FilterStub extends Filter
      *
      * @return void
      */
-    public function setRules(array $rules)
+    public function setRulesForTest(array $rules)
     {
         $this->rules = $rules;
     }

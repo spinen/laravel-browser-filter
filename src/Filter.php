@@ -22,7 +22,7 @@ abstract class Filter
      *
      * @var bool
      */
-    protected $blockFilter = null;
+    protected $block_filter = null;
 
     /**
      * The cache repository instance.
@@ -108,7 +108,7 @@ abstract class Filter
      *
      * @return string|bool
      */
-    protected function determineRedirect()
+    public function determineRedirect()
     {
         if ($this->needsRedirecting()) {
             return $this->getRedirectRoute();
@@ -124,7 +124,7 @@ abstract class Filter
      *
      * @return string
      */
-    protected function generateCacheKey(Request $request)
+    public function generateCacheKey(Request $request)
     {
         // NOTE: $request is an unused variable here, but needed in a class that extends this one
         return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
@@ -156,7 +156,7 @@ abstract class Filter
      *
      * @return mixed
      */
-    protected function getCacheTimeout()
+    public function getCacheTimeout()
     {
         return $this->config->get($this->config_path . 'timeout');
     }
@@ -206,6 +206,8 @@ abstract class Filter
         if (is_null($redirect)) {
             $this->parseFilterString($filter_string);
 
+            // TODO: Put rule validator here
+
             $redirect = $this->determineRedirect();
 
             $this->cache->put($cache_key, $redirect, $this->getCacheTimeout());
@@ -223,7 +225,7 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function haveRulesForDevice()
+    public function haveRulesForDevice()
     {
         return array_key_exists($this->client->device->family, $this->getRules());
     }
@@ -233,7 +235,7 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function haveVersionsForBrowser()
+    public function haveVersionsForBrowser()
     {
         return array_key_exists($this->client->device->family, $this->getRules()) &&
                array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
@@ -244,7 +246,7 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function isMatched()
+    public function isMatched()
     {
         return $this->isMatchedDevice() || $this->isMatchedBrowser() || $this->isMatchedBrowserVersion();
     }
@@ -254,7 +256,7 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isMatchedBrowser()
+    public function isMatchedBrowser()
     {
         return '*' === $this->getBrowserVersions();
     }
@@ -268,7 +270,7 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isMatchedBrowserVersion()
+    public function isMatchedBrowserVersion()
     {
         $denied = false;
 
@@ -279,7 +281,7 @@ abstract class Filter
             $denied |= (bool)version_compare($client_version, $version, $operator);
         }
 
-        return $denied;
+        return (bool)$denied;
     }
 
     /**
@@ -287,7 +289,7 @@ abstract class Filter
      *
      * @return bool
      */
-    private function isMatchedDevice()
+    public function isMatchedDevice()
     {
         return '*' === $this->getBrowsers();
     }
@@ -305,9 +307,9 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function needsRedirecting()
+    public function needsRedirecting()
     {
-        return !$this->blockFilter xor $this->isMatched();
+        return !$this->block_filter xor $this->isMatched();
     }
 
     /**
@@ -319,7 +321,7 @@ abstract class Filter
      *
      * @return bool
      */
-    protected function onRedirectPath(Request $request)
+    public function onRedirectPath(Request $request)
     {
         // TODO: Move this to session flash data
         return $request->path() === $this->getRedirectRoute();

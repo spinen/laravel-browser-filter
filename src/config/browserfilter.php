@@ -4,6 +4,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filter type
+    |--------------------------------------------------------------------------
+    |
+    | The filter is to apply blocking ("block") or allowing ("allow") strategy
+    | using the rules defined below.
+    |
+    */
+    'type'    => 'block',
+
+    /*
+    |--------------------------------------------------------------------------
     | Blocked devices, browsers and/or versions
     |--------------------------------------------------------------------------
     |
@@ -23,7 +34,7 @@ return [
     |
     | Here is an example...
     |
-    | 'blocked' => [
+    | 'rules' => [
     |     'Mobile' => '*',
     |     'Other'  => [
     |         'IE'    => '*',
@@ -35,14 +46,14 @@ return [
     |     ],
     | ],
     |
-    | In this example, we are blocking the following...
+    | In this example, we are allowing/blocking the following...
     |
     |     * All mobile devices
     |     * All versions of IE that is not on a tablet
     |     * Any version of Opera less than 6 on a tablet
     |
     */
-    'blocked' => [
+    'rules'   => [
         'Mobile' => [],
         'Other'  => [],
         'Tablet' => [],
@@ -56,7 +67,7 @@ return [
     | The name of the route to redirect to the user to if the browser is blocked
     |
     */
-    'route' => 'incompatible_browser',
+    'route'   => 'incompatible_browser',
 
     /*
     |--------------------------------------------------------------------------

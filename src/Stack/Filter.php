@@ -2,6 +2,7 @@
 
 namespace Spinen\BrowserFilter\Stack;
 
+use Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException;
 use Spinen\BrowserFilter\Filter as CoreFilter;
 
 /**
@@ -21,7 +22,37 @@ class Filter extends CoreFilter
      */
     public function parseFilterString($filter_string)
     {
-        // TODO: Check for allowed or blocked
-        $this->rules = $this->config->get($this->config_path . 'blocked', []);
+        // NOTE: $filter_string is unused, but needed to match signature of the method.
+
+        $this->setFilterType($this->config->get('type'));
+
+        $this->rules = $this->config->get($this->config_path . 'rules', []);
+    }
+
+    /**
+     * Set the filter type.
+     *
+     * @param $type
+     *
+     * @return void
+     *
+     * @throws InvalidFilterTypeException
+     */
+    protected function setFilterType($type)
+    {
+        if ('allow' === $type) {
+            $this->block_filter = false;
+
+            return;
+        }
+
+        if ('block' === $type) {
+            $this->block_filter = true;
+
+            return;
+        }
+
+        throw new InvalidFilterTypeException(sprintf("Invalid filter type [%s] was given. Only allow or block are permitted",
+            $type));
     }
 }

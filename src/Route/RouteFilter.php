@@ -66,11 +66,11 @@ abstract class RouteFilter extends Filter
     /**
      * @inheritDoc
      */
-    protected function generateCacheKey(Request $request)
+    public function generateCacheKey(Request $request)
     {
         return parent::generateCacheKey($request) .
                ':' .
-               ($this->blockFilter ? 'block' : 'allow') .
+               $this->getFilterType() .
                ':' .
                md5($request->path());
     }

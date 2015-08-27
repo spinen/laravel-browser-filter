@@ -487,14 +487,11 @@ class FilterTest extends FilterCase
                            ->withNoArgs()
                            ->andReturn('other_route');
 
-        $filter_string = 'Device,Other';
-
         $rules = [
-            'Device',
-            'Other',
+            'Device' => [],
         ];
 
-        $this->filter->handle($this->request_mock, $this->returnGiven(), $filter_string);
+        $this->filter->handle($this->request_mock, $this->returnGiven(), $rules);
 
         $this->assertEquals($rules, $this->filter->getRules());
     }
@@ -1241,5 +1238,148 @@ class FilterTest extends FilterCase
         $this->filter->setRedirectRouteForTest('other_route');
 
         $this->assertEquals(false, $this->filter->onRedirectPath($this->request_mock));
+    }
+
+    /**
+     * @test
+     */
+    public function it_validates_the_rules()
+    {
+        $rules = [
+            'Device 1' => [
+                'Browser' => [
+                    '=' => '1',
+                ],
+            ],
+            'Device 2' => [
+                'Browser' => '*',
+            ],
+            'Device 3' => '*',
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->assertNull($this->filter->validateRules());
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_devices_are_misconfigured_in_the_rules()
+    {
+        $rules = [
+            'Device',
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_devices_are_not_an_array_or_asterisk_in_the_rules()
+    {
+        $rules = [
+            'Device' => 2,
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_browsers_are_misconfigured_in_the_rules()
+    {
+        $rules = [
+            'Device' => [
+                'Broswer',
+            ],
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_browsers_are_not_an_array_or_asterisk_in_the_rules()
+    {
+        $rules = [
+            'Device' => [
+                'Browser' => '2',
+            ],
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_versions_are_misconfigured_in_the_rules()
+    {
+        $rules = [
+            'Device' => [
+                'Broswer' => [
+                    '2',
+                ],
+            ],
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_versions_operators_are_misconfigured_in_the_rules()
+    {
+        $rules = [
+            'Device' => [
+                'Broswer' => [
+                    '~' => '2',
+                ],
+            ],
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
+    }
+
+    /**
+     * @test
+     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
+     */
+    public function it_raises_exception_when_versions_are_not_a_string()
+    {
+        $rules = [
+            'Device' => [
+                'Broswer' => [
+                    '=' => 2,
+                ],
+            ],
+        ];
+
+        $this->filter->setRulesForTest($rules);
+
+        $this->filter->validateRules();
     }
 }

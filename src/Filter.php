@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Mobile_Detect;
 use Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException;
+use Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException;
 use Spinen\BrowserFilter\Support\ParserCreator;
 
 /**
@@ -223,7 +224,7 @@ abstract class Filter
         if (is_null($redirect)) {
             $this->parseFilterString($filter_string);
 
-            // TODO: Put rule validator here
+            $this->validateRules();
 
             $redirect = $this->determineRedirect();
 
@@ -354,4 +355,111 @@ abstract class Filter
      * @return void
      */
     abstract public function parseFilterString($filter_string);
+
+    /**
+     * Validate a device browser stanza in the rules.
+     *
+     * @param string       $device   Device name
+     * @param string       $browser  Browser name
+     * @param array|string $versions Array of browser versions or '*' for all versions
+     *
+     * @return void
+     *
+     * @throws InvalidRuleDefinitionsException
+     */
+    protected function validateBrowserRules($device, $browser, $versions)
+    {
+        if (!is_string($browser)) {
+            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browsers must be a string form of the name.",
+                $device));
+        }
+
+        if ('*' === $versions) {
+            return;
+        }
+
+        if (!is_array($versions)) {
+            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                $browser));
+        }
+
+        foreach ($versions as $operator => $version) {
+            $this->validateBrowserVersionRules($device, $browser, $operator, $version);
+        }
+    }
+
+    /**
+     * Validate a browser version stanza in the rules.
+     *
+     * @param string $device   Device name
+     * @param string $browser  Browser name
+     * @param string $operator Comparison operator
+     * @param string $version  Version of browser
+     *
+     * @return void
+     *
+     * @throws InvalidRuleDefinitionsException
+     */
+    protected function validateBrowserVersionRules($device, $browser, $operator, $version)
+    {
+        if (!is_string($version)) {
+            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browser [%s] version [%s] must be a string form of the version.",
+                $device, $browser, $version));
+        }
+
+        if (!in_array($operator, ['<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne'],
+            true)
+        ) {
+            throw new InvalidRuleDefinitionsException(sprintf("The comparison operator [%s] for [%s > %s] is invalid.",
+                $operator, $device, $browser));
+        }
+    }
+
+    /**
+     * Validate a device stanza in the rules.
+     *
+     * @param string       $device   Device name
+     * @param array|string $browsers Array of device browsers or '*' for all versions
+     *
+     * @return void
+     *
+     * @throws InvalidRuleDefinitionsException
+     */
+    protected function validDeviceRule($device, $browsers)
+    {
+        if (!is_string($device)) {
+            throw new InvalidRuleDefinitionsException('Devices must be a string form of the name.');
+        }
+
+        if ('*' === $browsers) {
+            return;
+        }
+
+        if (!is_array($browsers)) {
+            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                $device));
+        }
+
+        foreach ($browsers as $browser => $versions) {
+            $this->validateBrowserRules($device, $browser, $versions);
+        }
+    }
+
+    /**
+     * Validate the rules.
+     *
+     * @return void
+     *
+     * @throws InvalidRuleDefinitionsException
+     */
+    public function validateRules()
+    {
+        if (empty($this->getRules())) {
+            return;
+        }
+
+        foreach ($this->getRules() as $device => $browsers) {
+            $this->validDeviceRule($device, $browsers);
+        }
+    }
 }

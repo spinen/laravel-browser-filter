@@ -168,6 +168,20 @@ class FilterTest extends FilterCase
     /**
      * @test
      */
+    public function it_knows_the_type_of_filter()
+    {
+        $this->filter->setFilterAsAllowFilter();
+
+        $this->assertEquals('allow', $this->filter->getFilterType());
+
+        $this->filter->setFilterAsBlockFilter();
+
+        $this->assertEquals('block', $this->filter->getFilterType());
+    }
+
+    /**
+     * @test
+     */
     public function it_uses_the_configuration_redirect_route_as_the_default()
     {
         $this->config_mock->shouldReceive('get')

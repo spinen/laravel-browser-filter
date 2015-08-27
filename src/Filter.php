@@ -162,6 +162,16 @@ abstract class Filter
     }
 
     /**
+     * Return the filter type.
+     *
+     * @return string
+     */
+    public function getFilterType()
+    {
+        return $this->block_filter ? 'block' : 'allow';
+    }
+
+    /**
      * Get the route to the redirect path.
      *
      * @return string|null

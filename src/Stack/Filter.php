@@ -24,7 +24,7 @@ class Filter extends CoreFilter
     {
         // NOTE: $filter_string is unused, but needed to match signature of the method.
 
-        $this->setFilterType($this->config->get('type'));
+        $this->setFilterType($this->config->get($this->config_path . 'type'));
 
         $this->rules = $this->config->get($this->config_path . 'rules', []);
     }

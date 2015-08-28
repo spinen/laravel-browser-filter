@@ -232,6 +232,8 @@ abstract class Filter
         }
 
         if ($redirect) {
+            $request->session()->flash('redirected', true);
+
             return $this->redirector->route($redirect);
         }
 
@@ -341,8 +343,7 @@ abstract class Filter
      */
     public function onRedirectPath(Request $request)
     {
-        // TODO: Move this to session flash data
-        return $request->path() === $this->getRedirectRoute();
+        return $request->session()->get('redirected', false);
     }
 
     /**

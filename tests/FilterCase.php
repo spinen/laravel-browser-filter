@@ -7,6 +7,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Session\Store as Session;
 use Mobile_Detect;
 use Mockery;
 use Spinen\BrowserFilter\Support\ParserCreator;
@@ -75,6 +76,11 @@ abstract class FilterCase extends TestCase
      * @var Mockery\Mock
      */
     protected $request_mock;
+
+    /**
+     * @var Mockery\Mock
+     */
+    protected $session_mock;
 
     /**
      * Make a filter instance of the filter class under test.
@@ -146,5 +152,11 @@ abstract class FilterCase extends TestCase
         $this->redirector_mock = Mockery::mock(Redirector::class);
 
         $this->redirect_response_mock = Mockery::mock(RedirectResponse::class);
+
+        $this->session_mock = Mockery::mock(Session::class);
+
+        $this->request_mock->shouldReceive('session')
+                           ->withNoArgs()
+                           ->andReturn($this->session_mock);
     }
 }

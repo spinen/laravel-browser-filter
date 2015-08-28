@@ -238,15 +238,10 @@ class FilterTest extends FilterCase
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
 
-        $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.route')
-                          ->andReturn('route');
-
-        $this->request_mock->shouldReceive('path')
+        $this->session_mock->shouldReceive('get')
                            ->once()
-                           ->withNoArgs()
-                           ->andReturn('route');
+                           ->withArgs(['redirected', false])
+                           ->andReturn(true);
 
         $this->assertEquals($this->request_mock, $this->filter->handle($this->request_mock, $this->returnGiven()));
     }
@@ -281,19 +276,18 @@ class FilterTest extends FilterCase
                              ->andReturn('1.2.3');
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.route')
-                          ->andReturn('route');
+                          ->never()
+                          ->with('browserfilter.route');
 
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
                           ->andReturn('x');
 
-        $this->request_mock->shouldReceive('path')
+        $this->session_mock->shouldReceive('get')
                            ->once()
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
 
         $response = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -327,18 +321,17 @@ class FilterTest extends FilterCase
                              ->andReturn('1.2.3');
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.route')
-                          ->andReturn('route');
+                          ->never()
+                          ->with('browserfilter.route');
 
         $this->config_mock->shouldReceive('get')
                           ->never()
                           ->with('browserfilter.timeout');
 
-        $this->request_mock->shouldReceive('path')
+        $this->session_mock->shouldReceive('get')
                            ->once()
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
 
         $response = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -377,7 +370,7 @@ class FilterTest extends FilterCase
                              ->andReturn('1.2.3');
 
         $this->config_mock->shouldReceive('get')
-                          ->twice()
+                          ->once()
                           ->with('browserfilter.route')
                           ->andReturn('route');
 
@@ -391,10 +384,15 @@ class FilterTest extends FilterCase
                               ->with('route')
                               ->andReturn($this->redirect_response_mock);
 
-        $this->request_mock->shouldReceive('path')
+        $this->session_mock->shouldReceive('get')
                            ->once()
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
+
+        $this->session_mock->shouldReceive('flash')
+                           ->once()
+                           ->withArgs(['redirected', true])
+                           ->andReturnNull();
 
         $response = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -406,7 +404,7 @@ class FilterTest extends FilterCase
     /**
      * @test
      */
-    public function it_returns_the_redirect_when_the_client_is_cached_as_not_blocked()
+    public function it_returns_the_redirect_when_the_client_is_cached_as_blocked()
     {
         $this->filter->setFilterAsAllowFilter();
 
@@ -428,9 +426,8 @@ class FilterTest extends FilterCase
                              ->andReturn('1.2.3');
 
         $this->config_mock->shouldReceive('get')
-                          ->once()
-                          ->with('browserfilter.route')
-                          ->andReturn('route');
+                          ->never()
+                          ->with('browserfilter.route');
 
         $this->config_mock->shouldReceive('get')
                           ->never()
@@ -441,10 +438,15 @@ class FilterTest extends FilterCase
                               ->with('route')
                               ->andReturn($this->redirect_response_mock);
 
-        $this->request_mock->shouldReceive('path')
+        $this->session_mock->shouldReceive('get')
                            ->once()
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
+
+        $this->session_mock->shouldReceive('flash')
+                           ->once()
+                           ->withArgs(['redirected', true])
+                           ->andReturnNull();
 
         $response = $this->filter->handle($this->request_mock, $this->returnGiven());
 
@@ -483,9 +485,9 @@ class FilterTest extends FilterCase
                           ->with('browserfilter.timeout')
                           ->andReturn('x');
 
-        $this->request_mock->shouldReceive('path')
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+        $this->session_mock->shouldReceive('get')
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
 
         $rules = [
             'Device' => [],
@@ -533,9 +535,12 @@ class FilterTest extends FilterCase
                               ->with($redirect)
                               ->andReturn($this->redirect_response_mock);
 
-        $this->request_mock->shouldReceive('path')
-                           ->withNoArgs()
-                           ->andReturn('other_route');
+        $this->session_mock->shouldReceive('get')
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
+
+        $this->session_mock->shouldReceive('flash')
+                           ->withAnyArgs();
 
         $this->filter->handle($this->request_mock, $this->returnGiven(), null, $redirect);
 
@@ -1226,16 +1231,17 @@ class FilterTest extends FilterCase
      */
     public function it_knows_if_the_request_is_to_a_redirect_path_so_that_the_filter_can_be_ignored()
     {
-        $this->request_mock->shouldReceive('path')
-                           ->twice()
-                           ->withNoArgs()
-                           ->andReturn('route');
-
-        $this->filter->setRedirectRouteForTest('route');
+        $this->session_mock->shouldReceive('get')
+                           ->once()
+                           ->withArgs(['redirected', false])
+                           ->andReturn(true);
 
         $this->assertEquals(true, $this->filter->onRedirectPath($this->request_mock));
 
-        $this->filter->setRedirectRouteForTest('other_route');
+        $this->session_mock->shouldReceive('get')
+                           ->once()
+                           ->withArgs(['redirected', false])
+                           ->andReturn(false);
 
         $this->assertEquals(false, $this->filter->onRedirectPath($this->request_mock));
     }

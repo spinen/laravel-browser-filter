@@ -41,7 +41,7 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->once()
-                          ->with('type')
+                          ->with('browserfilter.type')
                           ->andReturn('allow');
 
         $this->filter->parseFilterString(null);
@@ -60,7 +60,7 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->once()
-                          ->with('type')
+                          ->with('browserfilter.type')
                           ->andReturn('block');
 
         $this->filter->parseFilterString(null);
@@ -80,7 +80,7 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->once()
-                          ->with('type')
+                          ->with('browserfilter.type')
                           ->andReturn('invalid');
 
         $this->filter->parseFilterString(null);
@@ -105,7 +105,7 @@ class FilterTest extends FilterCase
                           ->andReturn($rules);
 
         $this->config_mock->shouldReceive('get')
-                          ->with('type')
+                          ->with('browserfilter.type')
                           ->andReturn('allow');
 
         $this->filter->parseFilterString(null);

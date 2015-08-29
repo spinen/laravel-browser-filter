@@ -64,7 +64,7 @@ return [
     | Blocked devices, browsers and/or versions
     |--------------------------------------------------------------------------
     |
-    | The name of the route to redirect to the user to if the browser is blocked
+    | The name of the route to redirect the user to if the browser is blocked
     |
     */
     'route'   => 'incompatible_browser',

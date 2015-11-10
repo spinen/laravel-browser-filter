@@ -1,17 +1,21 @@
 # SPINEN's Laravel Browser Filter
 
+[![Latest Stable Version](https://poser.pugx.org/spinen/laravel-browser-filter/v/stable)](https://packagist.org/packages/spinen/laravel-browser-filter)
+[![Total Downloads](https://poser.pugx.org/spinen/laravel-browser-filter/downloads)](https://packagist.org/packages/spinen/laravel-browser-filter)
+[![Latest Unstable Version](https://poser.pugx.org/spinen/laravel-browser-filter/v/unstable)](https://packagist.org/packages/spinen/laravel-browser-filter)
+[![Dependency Status](https://www.versioneye.com/php/spinen:laravel-browser-filter/0.1.1/badge.svg)](https://www.versioneye.com/php/spinen:laravel-browser-filter/0.1.1)
+[![License](https://poser.pugx.org/spinen/laravel-browser-filter/license)](https://packagist.org/packages/spinen/laravel-browser-filter)
+
 This is a Laravel 5 middleware to filter routes based on browser types.
 
 We specify the browsers that we are going to support on the front of a project, so this package makes sure that the visitor is using a supported browser.
 
 ## Build Status
 
-| Branch | Status |
-| ------ | :----: |
-| Develop | [![Build Status](https://ci.spinen.net/buildStatus/icon?job=laravel-browser-filter-develop)](https://ci.spinen.net/view/Libraries/job/laravel-browser-filter-develop/) |
-| Feature | [![Build Status](https://ci.spinen.net/buildStatus/icon?job=laravel-browser-filter-feature__)](https://ci.spinen.net/view/Libraries/job/laravel-browser-filter-feature__/) |
-| Master | [![Build Status](https://ci.spinen.net/buildStatus/icon?job=laravel-browser-filter-master)](https://ci.spinen.net/view/Libraries/job/laravel-browser-filter-master/) |
-| Release | [![Build Status](https://ci.spinen.net/buildStatus/icon?job=laravel-browser-filter-release__)](https://ci.spinen.net/view/Libraries/job/laravel-browser-filter-release__/) |
+| Branch | Status | Coverage | Code Quality |
+| ------ | :----: | :------: | :----------: |
+| Develop | [![Build Status](https://travis-ci.org/spinen/laravel-browser-filter.svg?branch=develop)](https://travis-ci.org/spinen/laravel-browser-filter) | [![Coverage Status](https://coveralls.io/repos/spinen/laravel-browser-filter/badge.svg?branch=develop&service=github)](https://coveralls.io/github/spinen/laravel-browser-filter?branch=develop) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spinen/laravel-browser-filter/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/spinen/laravel-browser-filter/?branch=develop) |
+| Master | [![Build Status](https://travis-ci.org/spinen/laravel-browser-filter.svg?branch=master)](https://travis-ci.org/spinen/laravel-browser-filter) | [![Coverage Status](https://coveralls.io/repos/spinen/laravel-browser-filter/badge.svg?branch=master&service=github)](https://coveralls.io/github/spinen/laravel-browser-filter?branch=master) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spinen/laravel-browser-filter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spinen/laravel-browser-filter/?branch=master) |
 
 ## Prerequisite
 

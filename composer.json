@@ -21,8 +21,8 @@
         "illuminate/cache": "~5.1",
         "illuminate/routing": "~5.1",
         "illuminate/support": "~5.1",
-        "mobiledetect/mobiledetectlib": "2.8.*",
-        "ua-parser/uap-php": "3.4.*"
+        "mobiledetect/mobiledetectlib": "~2.8",
+        "ua-parser/uap-php": "~3.4.1"
     },
     "require-dev": {
         "illuminate/http": "~5.1",

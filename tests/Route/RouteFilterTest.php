@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Route;
+namespace Spinen\BrowserFilter\Route;
 
-use Tests\Spinen\BrowserFilter\FilterCase;
-use Tests\Spinen\BrowserFilter\Stubs\RouteFilterStub as Filter;
+use Spinen\BrowserFilter\FilterCase;
+use Spinen\BrowserFilter\Stubs\RouteFilterStub as Filter;
 
 class RouteFilterTest extends FilterCase
 {
@@ -89,7 +89,7 @@ class RouteFilterTest extends FilterCase
                          ->withArgs([
                              $cache_key,
                              $rules,
-                             'x'
+                             'x',
                          ])
                          ->andReturn([]);
 
@@ -133,7 +133,7 @@ class RouteFilterTest extends FilterCase
                          ->withArgs([
                              $cache_key,
                              $rules,
-                             'x'
+                             'x',
                          ])
                          ->andReturn([]);
 
@@ -175,7 +175,7 @@ class RouteFilterTest extends FilterCase
                          ->withArgs([
                              $cache_key,
                              $rules,
-                             'x'
+                             'x',
                          ])
                          ->andReturn([]);
 
@@ -214,7 +214,7 @@ class RouteFilterTest extends FilterCase
                          ->withArgs([
                              $cache_key,
                              $rules,
-                             'x'
+                             'x',
                          ])
                          ->andReturn([]);
 
@@ -252,7 +252,7 @@ class RouteFilterTest extends FilterCase
                          ->withArgs([
                              $cache_key,
                              $rules,
-                             'x'
+                             'x',
                          ]);
 
         $this->config_mock->shouldReceive('get')

@@ -1,15 +1,14 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Support;
+namespace Spinen\BrowserFilter\Support;
 
-use Spinen\BrowserFilter\Support\ParserCreator;
-use Tests\Spinen\BrowserFilter\TestCase;
+use Spinen\BrowserFilter\TestCase;
 use UAParser\Result\Client;
 
 /**
  * Class ParserCreatorTest
  *
- * @package Tests\Spinen\BrowserFilter\Support
+ * @package Spinen\BrowserFilter\Support
  */
 class ParserCreatorTest extends TestCase
 {

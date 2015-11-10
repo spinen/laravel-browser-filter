@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Stubs;
+namespace Spinen\BrowserFilter\Stubs;
 
 use Spinen\BrowserFilter\Filter;
 
 /**
  * Class FilterStub
  *
- * @package Tests\Spinen\BrowserFilter\Route\Stubs
+ * @package Spinen\BrowserFilter\Route\Stubs
  */
 class FilterStub extends Filter
 {

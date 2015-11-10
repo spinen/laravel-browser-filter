@@ -1,15 +1,14 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Stack;
+namespace Spinen\BrowserFilter\Stack;
 
 use Mockery;
-use Spinen\BrowserFilter\Stack\Filter;
-use Tests\Spinen\BrowserFilter\FilterCase;
+use Spinen\BrowserFilter\FilterCase;
 
 /**
  * Class FilterTest
  *
- * @package Tests\Spinen\BrowserFilter\Stack
+ * @package Spinen\BrowserFilter\Stack
  */
 class FilterTest extends FilterCase
 {

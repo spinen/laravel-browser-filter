@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter;
 
 use Mockery;
 use PHPUnit_Framework_TestCase;
@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase;
 /**
  * Class TestCase
  *
- * @package Tests\Spinen\BrowserFilter
+ * @package Spinen\BrowserFilter
  */
 abstract class TestCase extends PHPUnit_Framework_TestCase
 {

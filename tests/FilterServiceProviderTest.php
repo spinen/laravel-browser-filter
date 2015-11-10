@@ -1,17 +1,16 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Mockery;
-use Spinen\BrowserFilter\FilterServiceProvider;
 
 /**
  * Class FilterServiceProviderTest
  *
- * @package Tests\Spinen\BrowserFilter
+ * @package Spinen\BrowserFilter
  */
 class FilterServiceProviderTest extends TestCase
 {

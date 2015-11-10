@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -18,7 +18,7 @@ use UAParser\Result\UserAgent;
 /**
  * Class FilterCase
  *
- * @package Tests\Spinen\BrowserFilter
+ * @package Spinen\BrowserFilter
  */
 abstract class FilterCase extends TestCase
 {

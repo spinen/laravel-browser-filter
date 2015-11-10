@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter;
+namespace Spinen\BrowserFilter;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Mockery;
-use Tests\Spinen\BrowserFilter\Stubs\FilterStub as Filter;
+use Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 
 /**
  * Class FilterTest
  *
- * @package Tests\Spinen\BrowserFilter\Route
+ * @package Spinen\BrowserFilter\Route
  */
 class FilterTest extends FilterCase
 {

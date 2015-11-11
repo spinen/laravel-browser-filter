@@ -60,8 +60,8 @@ Register the Route Middlewares in file `app/Http/Kernel.php`:
 ```php
     protected $routeMiddleware = [
         // ..
-        'allowBrowser' => \Spinen\BrowserFilter\Route\AllowFilter::class,
-        'blockBrowser' => \Spinen\BrowserFilter\Route\BlockFilter::class,
+        'browser.allow' => \Spinen\BrowserFilter\Route\AllowFilter::class,
+        'browser.block' => \Spinen\BrowserFilter\Route\BlockFilter::class,
 ```
 
 Build a page with named route to redirect blocked browsers to:

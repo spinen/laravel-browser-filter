@@ -92,7 +92,7 @@ The rules are passed in after the ':' behind the router filter that you wish to 
 
 ```php
     Route::get('tablet_page', [
-        'middleware' => 'allowBrowser:Tablet',
+        'middleware' => 'browser.allow:Tablet',
         'uses'       => function () {
             return "Special page that is only accessible to tablets";
         }
@@ -103,7 +103,7 @@ or
 
 ```php
     Route::get('ie_is_blocked_page', [
-        'middleware' => 'blockBrowser:Other/Ie',
+        'middleware' => 'browser.block:Other/Ie',
         'uses'       => function () {
             return "Special page that is only accessible to non IE browsers on Desktops";
         }

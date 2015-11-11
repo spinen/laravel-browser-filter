@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Stubs;
+namespace Spinen\BrowserFilter\Stubs;
 
 use Spinen\BrowserFilter\Route\RouteFilter;
 

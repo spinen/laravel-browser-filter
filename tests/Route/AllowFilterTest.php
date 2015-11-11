@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Spinen\BrowserFilter\Route;
+namespace Spinen\BrowserFilter\Route;
 
 use Mockery;
+use Spinen\BrowserFilter\FilterCase;
 use Spinen\BrowserFilter\Route\AllowFilter as Filter;
-use Tests\Spinen\BrowserFilter\FilterCase;
 
 /**
  * Class FilterTest
  *
- * @package Tests\Spinen\BrowserFilter\Route
+ * @package Spinen\BrowserFilter\Route
  */
 class AllowFilterTest extends FilterCase
 {

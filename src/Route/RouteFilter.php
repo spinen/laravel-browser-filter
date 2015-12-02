@@ -102,7 +102,7 @@ abstract class RouteFilter extends Filter
 
         $cache_key = $this->generateFilterStringCacheKey($filter_string);
 
-        $this->rules = $this->cache->get($cache_key, []);
+        $this->rules = (array) $this->cache->get($cache_key, []);
 
         if ($this->rules !== []) {
             return;

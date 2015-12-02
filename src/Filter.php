@@ -43,7 +43,7 @@ abstract class Filter
     /**
      * The config repository instance.
      *
-     * @var Configs
+     * @var Config
      */
     protected $config;
 

@@ -12,6 +12,13 @@ use UAParser\Parser;
 class ParserCreator
 {
     /**
+     * User Agent Parser
+     *
+     * @var Parser
+     */
+    protected $parser;
+
+    /**
      * Create a new parser instance.
      */
     public function __construct()

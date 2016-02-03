@@ -47,12 +47,27 @@ Publish the package config file to `config/browserfilter.php`:
 $ php artisan vendor:publish
 ```
 
+### Laravel 5.1
+
 Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
 
 ```php
     protected $middleware = [
         // ..
         \Spinen\BrowserFilter\Stack\Filter::class,
+```
+
+### Laravel 5.2
+
+Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
+
+```php
+    protected $middlewareGroups = [
+        'web' => [
+            // ..
+            \Spinen\BrowserFilter\Stack\Filter::class,
+        ],
+        // ..
 ```
 
 Register the Route Middlewares in file `app/Http/Kernel.php`:

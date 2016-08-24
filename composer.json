@@ -17,9 +17,9 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "illuminate/cache": "~5.1|~5.2|~5.3",
-        "illuminate/routing": "~5.1|~5.2|~5.3",
-        "illuminate/support": "~5.1|~5.2|~5.3",
+        "illuminate/cache": "5.1.*|5.2.*|5.3.*",
+        "illuminate/routing": "5.1.*|5.2.*|5.3.*",
+        "illuminate/support": "5.1.*|5.2.*|5.3.*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "ua-parser/uap-php": "~3.4.1"
     },

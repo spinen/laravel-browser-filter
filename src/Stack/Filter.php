@@ -52,7 +52,9 @@ class Filter extends CoreFilter
             return;
         }
 
-        throw new InvalidFilterTypeException(sprintf("Invalid filter type [%s] was given. Only allow or block are permitted",
-            $type));
+        throw new InvalidFilterTypeException(sprintf(
+            "Invalid filter type [%s] was given. Only allow or block are permitted",
+            $type
+        ));
     }
 }

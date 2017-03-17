@@ -23,8 +23,6 @@ class Filter extends CoreFilter
      */
     public function generateCacheKey(Request $request)
     {
-        // NOTE: $request is an unused variable here, but needed in a class that extends this one
-
         // Append the rules with the version of the browser to allow new rules to bust the cache
         return md5(json_encode($this->config->get($this->config_path . 'rules', []))) .
                ':' .

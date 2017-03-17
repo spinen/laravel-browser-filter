@@ -12,19 +12,30 @@ use Illuminate\Support\ServiceProvider;
 class FilterServiceProvider extends ServiceProvider
 {
     /**
+     * Location of the configuration file in the package
+     *
+     * @var string
+     */
+    protected $config_file;
+
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        $this->config_file = realpath(__DIR__ . '/config/browserfilter.php');
+    }
+
+    /**
      * Perform post-registration booting of services.
      *
      * @return void
      */
     public function boot()
     {
-        $config_file = realpath(__DIR__ . '/config/browserfilter.php');
-
+        // Publish configuration file
         $this->publishes([
-            $config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
+            $this->config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
         ]);
-
-        $this->mergeConfigFrom($config_file, 'browserfilter');
     }
 
     /**
@@ -34,6 +45,7 @@ class FilterServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Use default configuration
+        $this->mergeConfigFrom($this->config_file, 'browserfilter');
     }
 }

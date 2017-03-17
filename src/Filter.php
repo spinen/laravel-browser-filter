@@ -129,11 +129,7 @@ abstract class Filter
     public function generateCacheKey(Request $request)
     {
         // NOTE: $request is an unused variable here, but needed in a class that extends this one
-        return $this->client->device->family .
-               ':' .
-               $this->client->ua->family .
-               ':' .
-               $this->client->ua->toVersion();
+        return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
     }
 
     /**
@@ -236,7 +232,8 @@ abstract class Filter
         }
 
         if ($redirect) {
-            $request->session()->flash('redirected', true);
+            $request->session()
+                    ->flash('redirected', true);
 
             return $this->redirector->route($redirect);
         }
@@ -347,7 +344,8 @@ abstract class Filter
      */
     public function onRedirectPath(Request $request)
     {
-        return $request->session()->get('redirected', false);
+        return $request->session()
+                       ->get('redirected', false);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Spinen\BrowserFilter\Stack;
 
+use Illuminate\Http\Request;
 use Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException;
 use Spinen\BrowserFilter\Filter as CoreFilter;
 
@@ -16,6 +17,23 @@ class Filter extends CoreFilter
      * @inheritDoc
      */
     protected $block_filter = true;
+
+    /**
+     * @inheritDoc
+     */
+    public function generateCacheKey(Request $request)
+    {
+        // NOTE: $request is an unused variable here, but needed in a class that extends this one
+
+        // Append the rules with the version of the browser to allow new rules to bust the cache
+        return md5(json_encode($this->config->get($this->config_path . 'rules', []))) .
+               ':' .
+               $this->client->device->family .
+               ':' .
+               $this->client->ua->family .
+               ':' .
+               $this->client->ua->toVersion();
+    }
 
     /**
      * @inheritDoc

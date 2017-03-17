@@ -126,11 +126,7 @@ abstract class Filter
      *
      * @return string
      */
-    public function generateCacheKey(Request $request)
-    {
-        // NOTE: $request is an unused variable here, but needed in a class that extends this one
-        return $this->client->device->family . ':' . $this->client->ua->family . ':' . $this->client->ua->toVersion();
-    }
+    abstract public function generateCacheKey(Request $request);
 
     /**
      * Get the browsers being filtered.

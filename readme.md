@@ -44,7 +44,7 @@ Add the Service Provider to `config/app.php`:
 Publish the package config file to `config/browserfilter.php`:
 
 ```bash
-$ php artisan vendor:publish
+$ php artisan vendor:publish --provider="Spinen\BrowserFilter\FilterServiceProvider"
 ```
 
 ### Laravel 5.1

@@ -97,7 +97,7 @@ There are 4 top level items that you can configure...
 1. type - The type of filtering strategy to apply to the stack filter
 2. rules - The array of devices/browsers/versions to allow/block for *ALL* http request
 3. route - The name of the route to redirect the user if they are using a blocked client
-4. timeout - The length of time to cache the client
+4. timeout - The length of time to cache the client, where "0" disables the cache
 
 ## Using the Route middleware
 

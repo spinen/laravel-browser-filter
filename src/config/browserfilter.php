@@ -80,6 +80,8 @@ return [
     |
     | The time in minutes to cache that the client is blocked
     |
+    | A time of "0" will disable the cache
+    |
     */
     'timeout' => 3600,
 

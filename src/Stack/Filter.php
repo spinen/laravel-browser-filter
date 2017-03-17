@@ -28,11 +28,7 @@ class Filter extends CoreFilter
         // Append the rules with the version of the browser to allow new rules to bust the cache
         return md5(json_encode($this->config->get($this->config_path . 'rules', []))) .
                ':' .
-               $this->client->device->family .
-               ':' .
-               $this->client->ua->family .
-               ':' .
-               $this->client->ua->toVersion();
+               parent::generateCacheKey($request);
     }
 
     /**

@@ -57,7 +57,7 @@ Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
         \Spinen\BrowserFilter\Stack\Filter::class,
 ```
 
-### Laravel 5.2
+### Laravel 5.2, 5.3 & 5.4
 
 Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
 

@@ -10,6 +10,10 @@ return [
     | The filter is to apply blocking ("block") or allowing ("allow") strategy
     | using the rules defined below.
     |
+    | "block" specifies that you want to *block* browsers that match a rule
+    |
+    | "allow" specifies that you want to *allow* browsers that match a rule
+    |
     */
     'type'    => 'block',
 
@@ -75,6 +79,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | The time in minutes to cache that the client is blocked
+    |
+    | A time of "0" will disable the cache
     |
     */
     'timeout' => 3600,

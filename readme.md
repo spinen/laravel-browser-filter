@@ -44,7 +44,7 @@ Add the Service Provider to `config/app.php`:
 Publish the package config file to `config/browserfilter.php`:
 
 ```bash
-$ php artisan vendor:publish
+$ php artisan vendor:publish --provider="Spinen\BrowserFilter\FilterServiceProvider"
 ```
 
 ### Laravel 5.1
@@ -57,7 +57,7 @@ Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
         \Spinen\BrowserFilter\Stack\Filter::class,
 ```
 
-### Laravel 5.2
+### Laravel 5.2, 5.3 & 5.4
 
 Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
 
@@ -97,7 +97,7 @@ There are 4 top level items that you can configure...
 1. type - The type of filtering strategy to apply to the stack filter
 2. rules - The array of devices/browsers/versions to allow/block for *ALL* http request
 3. route - The name of the route to redirect the user if they are using a blocked client
-4. timeout - The length of time to cache the client
+4. timeout - The length of time to cache the client, where "0" disables the cache
 
 ## Using the Route middleware
 

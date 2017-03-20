@@ -2,7 +2,6 @@
 
 namespace Spinen\BrowserFilter\Stack;
 
-use Mockery;
 use Spinen\BrowserFilter\FilterCase;
 
 /**
@@ -27,6 +26,27 @@ class FilterTest extends FilterCase
     public function it_can_be_constructed()
     {
         $this->assertInstanceOf(Filter::class, $this->filter);
+    }
+
+    /**
+     * @test
+     */
+    public function it_generates_the_cache_key()
+    {
+        $this->client_device_mock->family = 'Device';
+        $this->client_ua_mock->family = 'Browser';
+
+        $this->client_ua_mock->shouldReceive('toVersion')
+                             ->once()
+                             ->withNoArgs()
+                             ->andReturn('1.2.3');
+
+        $this->config_mock->shouldReceive('get')
+                          ->withArgs(['browserfilter.rules', []])
+                          ->andReturn([]);
+
+        $this->assertEquals(md5(json_encode([])) . ':Device:Browser:1.2.3',
+            $this->filter->generateCacheKey($this->request_mock));
     }
 
     /**

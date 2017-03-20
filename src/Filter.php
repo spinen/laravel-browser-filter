@@ -373,8 +373,10 @@ abstract class Filter
     protected function validateBrowserRules($device, $browser, $versions)
     {
         if (!is_string($browser)) {
-            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browsers must be a string form of the name.",
-                $device));
+            throw new InvalidRuleDefinitionsException(sprintf(
+                "Device [%s] browsers must be a string form of the name.",
+                $device
+            ));
         }
 
         if ('*' === $versions) {
@@ -382,8 +384,10 @@ abstract class Filter
         }
 
         if (!is_array($versions)) {
-            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
-                $browser));
+            throw new InvalidRuleDefinitionsException(sprintf(
+                "The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                $browser
+            ));
         }
 
         foreach ($versions as $operator => $version) {
@@ -406,15 +410,26 @@ abstract class Filter
     protected function validateBrowserVersionRules($device, $browser, $operator, $version)
     {
         if (!is_string($version)) {
-            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browser [%s] version [%s] must be a string form of the version.",
-                $device, $browser, $version));
+            throw new InvalidRuleDefinitionsException(sprintf(
+                "Device [%s] browser [%s] version [%s] must be a string form of the version.",
+                $device,
+                $browser,
+                $version
+            ));
         }
 
-        if (!in_array($operator, ['<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne'],
-            true)
+        if (!in_array(
+            $operator,
+            ['<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne'],
+            true
+        )
         ) {
-            throw new InvalidRuleDefinitionsException(sprintf("The comparison operator [%s] for [%s > %s] is invalid.",
-                $operator, $device, $browser));
+            throw new InvalidRuleDefinitionsException(sprintf(
+                "The comparison operator [%s] for [%s > %s] is invalid.",
+                $operator,
+                $device,
+                $browser
+            ));
         }
     }
 
@@ -439,8 +454,10 @@ abstract class Filter
         }
 
         if (!is_array($browsers)) {
-            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
-                $device));
+            throw new InvalidRuleDefinitionsException(sprintf(
+                "The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                $device
+            ));
         }
 
         foreach ($browsers as $browser => $versions) {

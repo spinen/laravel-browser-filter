@@ -17,14 +17,14 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*",
-        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*",
+        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
+        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
+        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "ua-parser/uap-php": "~3.4.1"
     },
     "require-dev": {
-        "illuminate/http": "~5.1",
+        "illuminate/http": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
         "mockery/mockery": "~0.9.1",
         "phpunit/phpunit": "~4.0|~5.0",
         "psy/psysh": "^0.5.1",
@@ -44,7 +44,16 @@
             "Spinen\\BrowserFilter\\": "tests"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spinen\\BrowserFilter\\FilterServiceProvider"
+            ]
+        }
+    },
     "config": {
-        "preferred-install": "dist"
-    }
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

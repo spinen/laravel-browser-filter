@@ -32,6 +32,12 @@ Install Browser Filter:
 $ composer require spinen/laravel-browser-filter
 ```
 
+### For >= Laravel 5.5, you are done with the Install
+
+The package uses the auto registration feature
+
+### For < Laravel 5.5, you have to register the Service Provider
+
 Add the Service Provider to `config/app.php`:
 
 ```php
@@ -41,11 +47,9 @@ Add the Service Provider to `config/app.php`:
 ];
 ```
 
-Publish the package config file to `config/browserfilter.php`:
+## Register the middleware
 
-```bash
-$ php artisan vendor:publish --provider="Spinen\BrowserFilter\FilterServiceProvider"
-```
+The middleware needs to be registered with the Kernel to allow it to parse the request.
 
 ### Laravel 5.1
 
@@ -57,7 +61,7 @@ Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
         \Spinen\BrowserFilter\Stack\Filter::class,
 ```
 
-### Laravel 5.2, 5.3 & 5.4
+### Laravel 5.2, 5.3, 5.4 & 5.5
 
 Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
 
@@ -90,9 +94,13 @@ Build a page with named route to redirect blocked browsers to:
 
 ## Configure middleware options
 
-During the install process `config/browserfilter.php` as copied to the project.  That file is fully documented, so please read it to know how to configure the middleware.
+Publish the package config file to `config/browserfilter.php`:
 
-There are 4 top level items that you can configure...
+```bash
+$ php artisan vendor:publish --provider="Spinen\BrowserFilter\FilterServiceProvider"
+```
+
+This file is fully documented, so please read it to know how to configure the middleware.  There are 4 top level items that you can configure...
 
 1. type - The type of filtering strategy to apply to the stack filter
 2. rules - The array of devices/browsers/versions to allow/block for *ALL* http request

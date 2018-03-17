@@ -2,7 +2,7 @@
 
 namespace Spinen\BrowserFilter;
 
-use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
@@ -12,12 +12,5 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
-    public function tearDown()
-    {
-        if (class_exists('Mockery')) {
-            Mockery::close();
-        }
-
-        parent::tearDown();
-    }
+    use MockeryPHPUnitIntegration;
 }

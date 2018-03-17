@@ -17,14 +17,14 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
-        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
+        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
+        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
+        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "ua-parser/uap-php": "~3.4.1"
     },
     "require-dev": {
-        "illuminate/http": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
+        "illuminate/http": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
         "mockery/mockery": "^1",
         "phpunit/phpunit": "~7.0",
         "psy/psysh": "^0.5.1",

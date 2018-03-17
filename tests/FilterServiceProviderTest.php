@@ -71,27 +71,4 @@ class FilterServiceProviderTest extends TestCase
     {
         $this->assertNull($this->service_provider->register());
     }
-
-    /**
-     * @test
-     */
-    public function it_performs_a_boot_method()
-    {
-        /*$this->application_mock->shouldReceive('publishes')
-                               ->once()
-                               ->with([
-                                   '/some/path/browserfilter.php',
-                               ])
-                               ->andReturnNull();
-
-        $this->application_mock->shouldReceive('mergeConfigFrom')
-                               ->once()
-                               ->withArgs([
-                                   '/config/browserfilter.php',
-                                   'browserfilter',
-                               ])
-                               ->andReturnNull();*/
-
-        $this->service_provider->boot();
-    }
 }

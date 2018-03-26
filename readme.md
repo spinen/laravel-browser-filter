@@ -34,7 +34,7 @@ $ composer require spinen/laravel-browser-filter
 
 ### For >= Laravel 5.5, you are done with the Install
 
-The package uses the auto registration feature
+The package uses the auto registration feature.
 
 ### For < Laravel 5.5, you have to register the Service Provider
 
@@ -61,7 +61,7 @@ Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
         \Spinen\BrowserFilter\Stack\Filter::class,
 ```
 
-### Laravel 5.2, 5.3, 5.4 & 5.5
+### Laravel 5.2 or greater
 
 Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
 
@@ -103,15 +103,15 @@ $ php artisan vendor:publish --provider="Spinen\BrowserFilter\FilterServiceProvi
 This file is fully documented, so please read it to know how to configure the middleware.  There are 4 top level items that you can configure...
 
 1. type - The type of filtering strategy to apply to the stack filter
-2. rules - The array of devices/browsers/versions to allow/block for *ALL* http request
+2. rules - The array of devices/browsers/versions to allow or block for *ALL* http requests
 3. route - The name of the route to redirect the user if they are using a blocked client
-4. timeout - The length of time to cache the client, where "0" disables the cache
+4. timeout - The length of time to cache the client data, where "0" disables the cache
 
 ## Using the Route middleware
 
-The route middleware using the same configuration file as the stack middleware, but ignores the rules.
+The route middleware uses the same configuration file as the stack middleware, but ignores the rules.
 
-The rules are passed in after the ':' behind the router filter that you wish to use...
+The rules are passed in after the ':' behind the route filter that you wish to use...
 
 ```php
     Route::get('tablet_page', [

@@ -16,15 +16,15 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
+        "php": ">=5.5.9",
+        "illuminate/cache": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*",
+        "illuminate/routing": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*",
+        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*",
         "mobiledetect/mobiledetectlib": "~2.8",
-        "ua-parser/uap-php": "~3.4.1"
+        "ua-parser/uap-php": "~3.5"
     },
     "require-dev": {
-        "illuminate/http": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
+        "illuminate/http": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*",
         "mockery/mockery": "^1",
         "phpunit/phpunit": "~7.0",
         "psy/psysh": "^0.5.1",

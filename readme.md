@@ -3,7 +3,6 @@
 [![Latest Stable Version](https://poser.pugx.org/spinen/laravel-browser-filter/v/stable)](https://packagist.org/packages/spinen/laravel-browser-filter)
 [![Total Downloads](https://poser.pugx.org/spinen/laravel-browser-filter/downloads)](https://packagist.org/packages/spinen/laravel-browser-filter)
 [![Latest Unstable Version](https://poser.pugx.org/spinen/laravel-browser-filter/v/unstable)](https://packagist.org/packages/spinen/laravel-browser-filter)
-[![Dependency Status](https://gemnasium.com/spinen/laravel-browser-filter.svg)](https://gemnasium.com/spinen/laravel-browser-filter)
 [![License](https://poser.pugx.org/spinen/laravel-browser-filter/license)](https://packagist.org/packages/spinen/laravel-browser-filter)
 
 This is a Laravel 5 middleware to filter routes based on browser types.

@@ -18,7 +18,7 @@ We specify the browsers that we are going to support on the front of a project, 
 
 ## Prerequisite
 
-As side from Laravel 5.x, there are 2 packages that are required
+As side from Laravel >= 5.5, there are 2 packages that are required
 
 * [mobiledetect](https://github.com/serbanghita/Mobile-Detect) - To get the user agent string.  I know that this package is not need to get to the string, but there are other features that I plan on using in the future, so I kept it installed.
 * [ua-parser PHP Library](https://github.com/tobie/ua-parser/tree/master/php) - To parse the user agent string
@@ -31,13 +31,7 @@ Install Browser Filter:
 $ composer require spinen/laravel-browser-filter
 ```
 
-### For >= Laravel 5.5, you are done with the Install
-
 The package uses the auto registration feature.
-
-### For < Laravel 5.5, you have to register the Service Provider
-
-Add the Service Provider to `config/app.php`:
 
 ```php
 'providers' => [
@@ -49,18 +43,6 @@ Add the Service Provider to `config/app.php`:
 ## Register the middleware
 
 The middleware needs to be registered with the Kernel to allow it to parse the request.
-
-### Laravel 5.1
-
-Register the HTTP Stack Middleware in file `app/Http/Kernel.php`:
-
-```php
-    protected $middleware = [
-        // ..
-        \Spinen\BrowserFilter\Stack\Filter::class,
-```
-
-### Laravel 5.2 - 5.6
 
 Register the HTTP Stack Middleware for the web group in file `app/Http/Kernel.php`:
 

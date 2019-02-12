@@ -2,6 +2,7 @@
 
 namespace Spinen\BrowserFilter\Stack;
 
+use Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException;
 use Spinen\BrowserFilter\FilterCase;
 
 /**
@@ -89,10 +90,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException
      */
     public function it_raises_exception_to_invalid_filter_type_in_configs()
     {
+        $this->expectException(InvalidFilterTypeException::class);
+
         $this->config_mock->shouldReceive('get')
                           ->withArgs(['browserfilter.rules', []])
                           ->andReturn([]);

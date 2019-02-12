@@ -4,7 +4,8 @@ namespace Spinen\BrowserFilter;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Mockery;
+use Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException;
+use Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException;
 use Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 
 /**
@@ -19,8 +20,9 @@ class FilterTest extends FilterCase
      */
     protected function createFilter()
     {
-        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
-            $this->redirector_mock);
+        $this->filter = new Filter(
+            $this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock, $this->redirector_mock
+        );
     }
 
     /**
@@ -181,11 +183,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     *
-     * @expectedException \Spinen\BrowserFilter\Exceptions\FilterTypeNotSetException
      */
     public function it_raises_exception_when_the_filter_type_has_not_been_set()
     {
+        $this->expectException(FilterTypeNotSetException::class);
+
         $this->filter->getFilterType();
     }
 
@@ -1270,10 +1272,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_devices_are_misconfigured_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device',
         ];
@@ -1285,10 +1288,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_devices_are_not_an_array_or_asterisk_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => 2,
         ];
@@ -1300,10 +1304,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_browsers_are_misconfigured_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => [
                 'Broswer',
@@ -1317,10 +1322,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_browsers_are_not_an_array_or_asterisk_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => [
                 'Browser' => '2',
@@ -1334,10 +1340,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_versions_are_misconfigured_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => [
                 'Broswer' => [
@@ -1353,10 +1360,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_versions_operators_are_misconfigured_in_the_rules()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => [
                 'Broswer' => [
@@ -1372,10 +1380,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidRuleDefinitionsException
      */
     public function it_raises_exception_when_versions_are_not_a_string()
     {
+        $this->expectException(InvalidRuleDefinitionsException::class);
+
         $rules = [
             'Device' => [
                 'Broswer' => [

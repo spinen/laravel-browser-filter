@@ -104,7 +104,7 @@ abstract class FilterCase extends TestCase
     /**
      * Setup the test.
      */
-    protected function setUp()
+    protected function setUp() :void
     {
         $this->setUpMocks();
 

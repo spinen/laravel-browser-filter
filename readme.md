@@ -18,6 +18,8 @@ We specify the browsers that we are going to support on the front of a project, 
 
 ## Prerequisite
 
+#### NOTE: If you need to use < php7.2, please stay with version 1.x
+
 As side from Laravel >= 5.5, there are 2 packages that are required
 
 * [mobiledetect](https://github.com/serbanghita/Mobile-Detect) - To get the user agent string.  I know that this package is not need to get to the string, but there are other features that I plan on using in the future, so I kept it installed.

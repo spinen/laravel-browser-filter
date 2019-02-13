@@ -36,6 +36,4 @@ install:
   - if [[ $SETUP = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
   - if [[ $SETUP = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
 
-before_script: mkdir -p build/logs
-
 script: vendor/bin/phpunit

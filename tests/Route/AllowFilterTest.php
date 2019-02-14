@@ -2,7 +2,6 @@
 
 namespace Spinen\BrowserFilter\Route;
 
-use Mockery;
 use Spinen\BrowserFilter\FilterCase;
 use Spinen\BrowserFilter\Route\AllowFilter as Filter;
 
@@ -18,8 +17,9 @@ class AllowFilterTest extends FilterCase
      */
     protected function createFilter()
     {
-        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
-            $this->redirector_mock);
+        $this->filter = new Filter(
+            $this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock, $this->redirector_mock
+        );
     }
 
     /**

@@ -265,11 +265,13 @@ class FilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             'Device:Browser:1.2.3',
-                             false,
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 'Device:Browser:1.2.3',
+                                 false,
+                                 'x',
+                             ]
+                         )
                          ->andReturnNull();
 
         $this->client_ua_mock->shouldReceive('toVersion')
@@ -359,11 +361,13 @@ class FilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             'Device:Browser:1.2.3',
-                             'route',
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 'Device:Browser:1.2.3',
+                                 'route',
+                                 'x',
+                             ]
+                         )
                          ->andReturnNull();
 
         $this->client_ua_mock->shouldReceive('toVersion')

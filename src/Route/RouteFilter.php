@@ -40,8 +40,8 @@ abstract class RouteFilter extends Filter
     /**
      * Loop through all of the versions in the string and process them.
      *
-     * @param string $device            The device
-     * @param string $browser           The browser
+     * @param string $device The device
+     * @param string $browser The browser
      * @param string $operator_versions The versions separated by '|'
      *
      * @return array
@@ -55,7 +55,7 @@ abstract class RouteFilter extends Filter
             // Remove everything to the leading numbers
             $version = preg_replace("/^[^\\d]*/u", "", $operator_version);
             // Default no operator to equals
-            $operator = str_replace($version, '', $operator_version) ?: '=';
+            $operator = str_replace($version, '', $operator_version) ? : '=';
 
             $versions[$operator] = $version;
         }
@@ -68,11 +68,7 @@ abstract class RouteFilter extends Filter
      */
     public function generateCacheKey(Request $request)
     {
-        return parent::generateCacheKey($request) .
-               ':' .
-               $this->getFilterType() .
-               ':' .
-               md5($request->path());
+        return parent::generateCacheKey($request) . ':' . $this->getFilterType() . ':' . md5($request->path());
     }
 
     /**

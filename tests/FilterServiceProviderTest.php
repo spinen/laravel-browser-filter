@@ -29,7 +29,7 @@ class FilterServiceProviderTest extends TestCase
      */
     protected $service_provider;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         $this->setUpMocks();
 

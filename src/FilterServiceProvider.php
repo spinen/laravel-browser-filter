@@ -33,9 +33,11 @@ class FilterServiceProvider extends ServiceProvider
     public function boot()
     {
         // Publish configuration file
-        $this->publishes([
-            $this->config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
-        ]);
+        $this->publishes(
+            [
+                $this->config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
+            ]
+        );
     }
 
     /**

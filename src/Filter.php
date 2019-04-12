@@ -145,12 +145,15 @@ abstract class Filter
     /**
      * Get the versions of the browsers being filtered.
      *
-     * @return string|array
+     * @return string|array|null
      */
     public function getBrowserVersions()
     {
-        return $this->haveVersionsForBrowser() ? $this->getRules(
-        )[$this->client->device->family][$this->client->ua->family] : null;
+        if ($this->haveVersionsForBrowser()) {
+            return $this->getRules()[$this->client->device->family][$this->client->ua->family];
+        }
+
+        return null;
     }
 
     /**

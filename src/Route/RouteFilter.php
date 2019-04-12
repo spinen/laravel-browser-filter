@@ -38,8 +38,6 @@ abstract class RouteFilter extends Filter
         }
 
         $this->rules[$device][$browser] = $this->extractVersions($device, $browser, $operator_versions);
-
-        return;
     }
 
     /**

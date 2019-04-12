@@ -15,7 +15,7 @@ use Spinen\BrowserFilter\Support\ParserCreator;
 /**
  * Class Filter
  *
- * @package Spinen\BrowserFilter\Route
+ * @package Spinen\BrowserFilter
  */
 abstract class Filter
 {

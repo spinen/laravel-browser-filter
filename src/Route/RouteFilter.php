@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Illuminate\Http\Request;
 use Spinen\BrowserFilter\Filter;
 
+/**
+ * Class RouteFilter
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 abstract class RouteFilter extends Filter
 {
     /**
@@ -18,14 +23,14 @@ abstract class RouteFilter extends Filter
     {
         list($device, $browser, $operator_versions) = array_pad(array_filter(explode('/', $filter, 3)), 3, '*');
 
-        // Block all browsers of the device
+        // Apply rule to all browsers of the device
         if ('*' === $browser) {
             $this->rules[$device] = '*';
 
             return;
         }
 
-        // Block all versions of the browser
+        // Apply rule to all versions of the browser
         if ('*' === $operator_versions) {
             $this->rules[$device][$browser] = '*';
 

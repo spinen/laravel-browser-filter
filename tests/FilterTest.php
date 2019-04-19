@@ -11,7 +11,7 @@ use Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 /**
  * Class FilterTest
  *
- * @package Spinen\BrowserFilter\Route
+ * @package Spinen\BrowserFilter
  */
 class FilterTest extends FilterCase
 {

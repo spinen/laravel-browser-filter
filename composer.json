@@ -1,10 +1,9 @@
 {
     "name": "spinen/laravel-browser-filter",
-    "description": "Filters request based on browser type.",
+    "description": "Filters http requests based on browser type.",
     "keywords": [
         "browser hawk",
         "laravel",
-        "library",
         "middleware",
         "spinen"
     ],
@@ -36,12 +35,12 @@
             "src/Support/helper.php"
         ],
         "psr-4": {
-            "Spinen\\BrowserFilter\\": "src"
+            "Spinen\\BrowserFilter\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spinen\\BrowserFilter\\": "tests"
+            "Spinen\\BrowserFilter\\": "tests/"
         }
     },
     "extra": {

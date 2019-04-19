@@ -19,7 +19,7 @@
          verbose="true">
 
     <testsuites>
-        <testsuite name="Library Test Suite">
+        <testsuite name="SPINEN's Laravel Browser Filter">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
@@ -30,10 +30,10 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
-                <!--<file>src/file.php</file>-->
-                <directory suffix=".php">src/config</directory>
+                <directory suffix=".php">./src/config</directory>
+                <directory>./src/Http/Exceptions</directory>
             </exclude>
         </whitelist>
     </filter>

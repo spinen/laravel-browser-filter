@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Spinen\BrowserFilter\FilterCase;
 use Spinen\BrowserFilter\Stubs\RouteFilterStub as Filter;
 
+/**
+ * Class RouteFilterTest
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 class RouteFilterTest extends FilterCase
 {
     /**

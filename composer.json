@@ -16,18 +16,18 @@
     ],
     "require": {
         "php": ">=7.2",
-        "illuminate/cache": "5.5.*|5.6.*|5.7.*|5.8.*",
-        "illuminate/routing": "5.5.*|5.6.*|5.7.*|5.8.*",
-        "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/cache": "5.5.*|5.6.*|5.7.*|5.8.*|6.0.*",
+        "illuminate/routing": "5.5.*|5.6.*|5.7.*|5.8.*|6.0.*",
+        "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*|6.0.*",
         "mobiledetect/mobiledetectlib": "~2.8",
         "ua-parser/uap-php": "~3.5"
     },
     "require-dev": {
-        "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*",
+        "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*|6.0.*",
         "mockery/mockery": "^1",
         "phpunit/phpunit": "~7.0.1|~8.0",
-        "psy/psysh": "^0.5.1",
-        "symfony/thanks": "^1.0",
+        "psy/psysh": "^0.9.9",
+        "symfony/thanks": "^1.1",
         "symfony/var-dumper": "~3.0|^4.2"
     },
     "autoload": {

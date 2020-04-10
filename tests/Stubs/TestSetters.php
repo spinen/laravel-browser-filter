@@ -2,6 +2,11 @@
 
 namespace Spinen\BrowserFilter\Stubs;
 
+/**
+ * Trait TestSetters
+ *
+ * @package Spinen\BrowserFilter\Stubs
+ */
 trait TestSetters
 {
     /**

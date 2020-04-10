@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Spinen\BrowserFilter\FilterCase;
 use Spinen\BrowserFilter\Stubs\RouteFilterStub as Filter;
 
+/**
+ * Class RouteFilterTest
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 class RouteFilterTest extends FilterCase
 {
     /**
@@ -12,8 +17,9 @@ class RouteFilterTest extends FilterCase
      */
     protected function createFilter()
     {
-        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
-            $this->redirector_mock);
+        $this->filter = new Filter(
+            $this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock, $this->redirector_mock
+        );
     }
 
     /**
@@ -45,8 +51,10 @@ class RouteFilterTest extends FilterCase
                            ->withNoArgs()
                            ->andReturn($path);
 
-        $this->assertEquals('Device:Browser:1.2.3:allow:' . md5($path),
-            $this->filter->generateCacheKey($this->request_mock));
+        $this->assertEquals(
+            'Device:Browser:1.2.3:allow:' . md5($path),
+            $this->filter->generateCacheKey($this->request_mock)
+        );
     }
 
     /**
@@ -86,11 +94,13 @@ class RouteFilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             $cache_key,
-                             $rules,
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 $cache_key,
+                                 $rules,
+                                 'x',
+                             ]
+                         )
                          ->andReturn([]);
 
         $this->config_mock->shouldReceive('get')
@@ -130,11 +140,13 @@ class RouteFilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             $cache_key,
-                             $rules,
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 $cache_key,
+                                 $rules,
+                                 'x',
+                             ]
+                         )
                          ->andReturn([]);
 
         $this->config_mock->shouldReceive('get')
@@ -172,11 +184,13 @@ class RouteFilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             $cache_key,
-                             $rules,
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 $cache_key,
+                                 $rules,
+                                 'x',
+                             ]
+                         )
                          ->andReturn([]);
 
         $this->config_mock->shouldReceive('get')
@@ -211,11 +225,13 @@ class RouteFilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
-                         ->withArgs([
-                             $cache_key,
-                             $rules,
-                             'x',
-                         ])
+                         ->withArgs(
+                             [
+                                 $cache_key,
+                                 $rules,
+                                 'x',
+                             ]
+                         )
                          ->andReturn([]);
 
         $this->config_mock->shouldReceive('get')
@@ -249,11 +265,13 @@ class RouteFilterTest extends FilterCase
 
         $this->cache_mock->shouldReceive('put')
                          ->never()
-                         ->withArgs([
-                             $cache_key,
-                             $rules,
-                             'x',
-                         ]);
+                         ->withArgs(
+                             [
+                                 $cache_key,
+                                 $rules,
+                                 'x',
+                             ]
+                         );
 
         $this->config_mock->shouldReceive('get')
                           ->never()

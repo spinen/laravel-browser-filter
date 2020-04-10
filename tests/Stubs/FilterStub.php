@@ -7,7 +7,7 @@ use Spinen\BrowserFilter\Filter;
 /**
  * Class FilterStub
  *
- * @package Spinen\BrowserFilter\Route\Stubs
+ * @package Spinen\BrowserFilter\Stubs
  */
 class FilterStub extends Filter
 {

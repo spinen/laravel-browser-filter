@@ -2,6 +2,7 @@
 
 namespace Spinen\BrowserFilter\Stack;
 
+use Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException;
 use Spinen\BrowserFilter\FilterCase;
 
 /**
@@ -16,8 +17,9 @@ class FilterTest extends FilterCase
      */
     protected function createFilter()
     {
-        $this->filter = new Filter($this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock,
-            $this->redirector_mock);
+        $this->filter = new Filter(
+            $this->cache_mock, $this->config_mock, $this->detector_mock, $this->parser_mock, $this->redirector_mock
+        );
     }
 
     /**
@@ -45,8 +47,10 @@ class FilterTest extends FilterCase
                           ->withArgs(['browserfilter.rules', []])
                           ->andReturn([]);
 
-        $this->assertEquals(md5(json_encode([])) . ':Device:Browser:1.2.3',
-            $this->filter->generateCacheKey($this->request_mock));
+        $this->assertEquals(
+            md5(json_encode([])) . ':Device:Browser:1.2.3',
+            $this->filter->generateCacheKey($this->request_mock)
+        );
     }
 
     /**
@@ -89,10 +93,11 @@ class FilterTest extends FilterCase
 
     /**
      * @test
-     * @expectedException \Spinen\BrowserFilter\Exceptions\InvalidFilterTypeException
      */
     public function it_raises_exception_to_invalid_filter_type_in_configs()
     {
+        $this->expectException(InvalidFilterTypeException::class);
+
         $this->config_mock->shouldReceive('get')
                           ->withArgs(['browserfilter.rules', []])
                           ->andReturn([]);

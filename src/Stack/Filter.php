@@ -25,8 +25,8 @@ class Filter extends CoreFilter
     {
         // Append the rules with the version of the browser to allow new rules to bust the cache
         return md5(json_encode($this->config->get($this->config_path . 'rules', []))) .
-               ':' .
-               parent::generateCacheKey($request);
+            ':' .
+            parent::generateCacheKey($request);
     }
 
     /**
@@ -64,7 +64,11 @@ class Filter extends CoreFilter
             return;
         }
 
-        throw new InvalidFilterTypeException(sprintf("Invalid filter type [%s] was given. Only allow or block are permitted",
-            $type));
+        throw new InvalidFilterTypeException(
+            sprintf(
+                "Invalid filter type [%s] was given. Only allow or block are permitted.",
+                $type
+            )
+        );
     }
 }

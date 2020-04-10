@@ -15,7 +15,7 @@ use Spinen\BrowserFilter\Support\ParserCreator;
 /**
  * Class Filter
  *
- * @package Spinen\BrowserFilter\Route
+ * @package Spinen\BrowserFilter
  */
 abstract class Filter
 {
@@ -85,11 +85,11 @@ abstract class Filter
     /**
      * Create a new browser filter middleware instance.
      *
-     * @param Cache         $cache      Cache
-     * @param Config        $config     Config
-     * @param Mobile_Detect $detector   Mobile_Detect
-     * @param ParserCreator $parser     ParserCreator
-     * @param Redirector    $redirector Redirector
+     * @param Cache $cache Cache
+     * @param Config $config Config
+     * @param Mobile_Detect $detector Mobile_Detect
+     * @param ParserCreator $parser ParserCreator
+     * @param Redirector $redirector Redirector
      */
     public function __construct(
         Cache $cache,
@@ -145,12 +145,15 @@ abstract class Filter
     /**
      * Get the versions of the browsers being filtered.
      *
-     * @return string|array
+     * @return string|array|null
      */
     public function getBrowserVersions()
     {
-        return $this->haveVersionsForBrowser()
-            ? $this->getRules()[$this->client->device->family][$this->client->ua->family] : null;
+        if ($this->haveVersionsForBrowser()) {
+            return $this->getRules()[$this->client->device->family][$this->client->ua->family];
+        }
+
+        return null;
     }
 
     /**
@@ -186,7 +189,7 @@ abstract class Filter
      */
     public function getRedirectRoute()
     {
-        return $this->redirect_route ?: $this->config->get($this->config_path . 'route');
+        return $this->redirect_route ? : $this->config->get($this->config_path . 'route');
     }
 
     /**
@@ -202,9 +205,9 @@ abstract class Filter
     /**
      * Handle an incoming request.
      *
-     * @param Request     $request        Request
-     * @param Closure     $next           Closure
-     * @param string|null $filter_string  Filter in string format
+     * @param Request $request Request
+     * @param Closure $next Closure
+     * @param string|null $filter_string Filter in string format
      * @param string|null $redirect_route Named route to redirect blocked client
      *
      * @return mixed
@@ -259,7 +262,7 @@ abstract class Filter
     public function haveVersionsForBrowser()
     {
         return array_key_exists($this->client->device->family, $this->getRules()) &&
-               array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
+            array_key_exists($this->client->ua->family, $this->getRules()[$this->client->device->family]);
     }
 
     /**
@@ -362,8 +365,8 @@ abstract class Filter
     /**
      * Validate a device browser stanza in the rules.
      *
-     * @param string       $device   Device name
-     * @param string       $browser  Browser name
+     * @param string $device Device name
+     * @param string $browser Browser name
      * @param array|string $versions Array of browser versions or '*' for all versions
      *
      * @return void
@@ -373,8 +376,12 @@ abstract class Filter
     protected function validateBrowserRules($device, $browser, $versions)
     {
         if (!is_string($browser)) {
-            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browsers must be a string form of the name.",
-                $device));
+            throw new InvalidRuleDefinitionsException(
+                sprintf(
+                    "Device [%s] browsers must be a string form of the name.",
+                    $device
+                )
+            );
         }
 
         if ('*' === $versions) {
@@ -382,8 +389,12 @@ abstract class Filter
         }
 
         if (!is_array($versions)) {
-            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
-                $browser));
+            throw new InvalidRuleDefinitionsException(
+                sprintf(
+                    "The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                    $browser
+                )
+            );
         }
 
         foreach ($versions as $operator => $version) {
@@ -394,10 +405,10 @@ abstract class Filter
     /**
      * Validate a browser version stanza in the rules.
      *
-     * @param string $device   Device name
-     * @param string $browser  Browser name
+     * @param string $device Device name
+     * @param string $browser Browser name
      * @param string $operator Comparison operator
-     * @param string $version  Version of browser
+     * @param string $version Version of browser
      *
      * @return void
      *
@@ -406,22 +417,36 @@ abstract class Filter
     protected function validateBrowserVersionRules($device, $browser, $operator, $version)
     {
         if (!is_string($version)) {
-            throw new InvalidRuleDefinitionsException(sprintf("Device [%s] browser [%s] version [%s] must be a string form of the version.",
-                $device, $browser, $version));
+            throw new InvalidRuleDefinitionsException(
+                sprintf(
+                    "Device [%s] browser [%s] version [%s] must be a string form of the version.",
+                    $device,
+                    $browser,
+                    $version
+                )
+            );
         }
 
-        if (!in_array($operator, ['<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne'],
-            true)
-        ) {
-            throw new InvalidRuleDefinitionsException(sprintf("The comparison operator [%s] for [%s > %s] is invalid.",
-                $operator, $device, $browser));
+        if (!in_array(
+            $operator,
+            ['<', 'lt', '<=', 'le', '>', 'gt', '>=', 'ge', '==', '=', 'eq', '!=', '<>', 'ne'],
+            true
+        )) {
+            throw new InvalidRuleDefinitionsException(
+                sprintf(
+                    "The comparison operator [%s] for [%s > %s] is invalid.",
+                    $operator,
+                    $device,
+                    $browser
+                )
+            );
         }
     }
 
     /**
      * Validate a device stanza in the rules.
      *
-     * @param string       $device   Device name
+     * @param string $device Device name
      * @param array|string $browsers Array of device browsers or '*' for all versions
      *
      * @return void
@@ -439,8 +464,12 @@ abstract class Filter
         }
 
         if (!is_array($browsers)) {
-            throw new InvalidRuleDefinitionsException(sprintf("The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
-                $device));
+            throw new InvalidRuleDefinitionsException(
+                sprintf(
+                    "The value for [%s] must be either an array of browsers or an asterisk (*) for all browsers.",
+                    $device
+                )
+            );
         }
 
         foreach ($browsers as $browser => $versions) {

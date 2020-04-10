@@ -5,6 +5,11 @@ namespace Spinen\BrowserFilter\Route;
 use Illuminate\Http\Request;
 use Spinen\BrowserFilter\Filter;
 
+/**
+ * Class RouteFilter
+ *
+ * @package Spinen\BrowserFilter\Route
+ */
 abstract class RouteFilter extends Filter
 {
     /**
@@ -18,14 +23,14 @@ abstract class RouteFilter extends Filter
     {
         list($device, $browser, $operator_versions) = array_pad(array_filter(explode('/', $filter, 3)), 3, '*');
 
-        // Block all browsers of the device
+        // Apply rule to all browsers of the device
         if ('*' === $browser) {
             $this->rules[$device] = '*';
 
             return;
         }
 
-        // Block all versions of the browser
+        // Apply rule to all versions of the browser
         if ('*' === $operator_versions) {
             $this->rules[$device][$browser] = '*';
 
@@ -33,15 +38,13 @@ abstract class RouteFilter extends Filter
         }
 
         $this->rules[$device][$browser] = $this->extractVersions($device, $browser, $operator_versions);
-
-        return;
     }
 
     /**
      * Loop through all of the versions in the string and process them.
      *
-     * @param string $device            The device
-     * @param string $browser           The browser
+     * @param string $device The device
+     * @param string $browser The browser
      * @param string $operator_versions The versions separated by '|'
      *
      * @return array
@@ -55,7 +58,7 @@ abstract class RouteFilter extends Filter
             // Remove everything to the leading numbers
             $version = preg_replace("/^[^\\d]*/u", "", $operator_version);
             // Default no operator to equals
-            $operator = str_replace($version, '', $operator_version) ?: '=';
+            $operator = str_replace($version, '', $operator_version) ? : '=';
 
             $versions[$operator] = $version;
         }
@@ -68,11 +71,7 @@ abstract class RouteFilter extends Filter
      */
     public function generateCacheKey(Request $request)
     {
-        return parent::generateCacheKey($request) .
-               ':' .
-               $this->getFilterType() .
-               ':' .
-               md5($request->path());
+        return parent::generateCacheKey($request) . ':' . $this->getFilterType() . ':' . md5($request->path());
     }
 
     /**

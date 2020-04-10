@@ -252,6 +252,8 @@ abstract class Filter
     public function haveRulesForDevice()
     {
         return array_key_exists($this->client->device->family, $this->getRules());
+
+        //$this->client->device->family
     }
 
     /**

@@ -36,6 +36,6 @@ class ParserCreator
      */
     public function parseAgent($agent)
     {
-        return $this->parser->parse($agent);
+        return $this->parser->parse((string) $agent);
     }
 }

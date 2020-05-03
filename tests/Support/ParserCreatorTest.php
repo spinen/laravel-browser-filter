@@ -39,4 +39,12 @@ class ParserCreatorTest extends TestCase
     {
         $this->assertInstanceOf(Client::class, $this->parser->parseAgent('SomeAgent'));
     }
+
+    /**
+     * @test
+     */
+    public function it_will_parse_a_null_agent_string()
+    {
+        $this->assertInstanceOf(Client::class, $this->parser->parseAgent(null));
+    }
 }

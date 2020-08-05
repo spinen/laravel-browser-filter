@@ -1315,7 +1315,7 @@ class FilterTest extends FilterCase
 
         $rules = [
             'Device' => [
-                'Broswer',
+                'Browser',
             ],
         ];
 
@@ -1351,7 +1351,7 @@ class FilterTest extends FilterCase
 
         $rules = [
             'Device' => [
-                'Broswer' => [
+                'Browser' => [
                     '2',
                 ],
             ],
@@ -1371,7 +1371,7 @@ class FilterTest extends FilterCase
 
         $rules = [
             'Device' => [
-                'Broswer' => [
+                'Browser' => [
                     '~' => '2',
                 ],
             ],
@@ -1391,7 +1391,7 @@ class FilterTest extends FilterCase
 
         $rules = [
             'Device' => [
-                'Broswer' => [
+                'Browser' => [
                     '=' => 2,
                 ],
             ],

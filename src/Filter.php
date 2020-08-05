@@ -305,7 +305,7 @@ abstract class Filter
             $denied |= (bool) version_compare($client_version, $version, $operator);
         }
 
-        return (bool) $denied;
+        return $denied;
     }
 
     /**

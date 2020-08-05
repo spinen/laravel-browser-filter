@@ -44,13 +44,13 @@ class Filter extends CoreFilter
     /**
      * Set the filter type.
      *
-     * @param $type
+     * @param string $type
      *
      * @return void
      *
      * @throws InvalidFilterTypeException
      */
-    protected function setFilterType($type)
+    protected function setFilterType(string $type)
     {
         if ('allow' === $type) {
             $this->block_filter = false;

@@ -58,7 +58,7 @@ abstract class RouteFilter extends Filter
             // Remove everything to the leading numbers
             $version = preg_replace("/^[^\\d]*/u", "", $operator_version);
             // Default no operator to equals
-            $operator = str_replace($version, '', $operator_version) ? : '=';
+            $operator = str_replace($version, '', $operator_version) ?: '=';
 
             $versions[$operator] = $version;
         }

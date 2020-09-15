@@ -189,7 +189,7 @@ abstract class Filter
      */
     public function getRedirectRoute()
     {
-        return $this->redirect_route ? : $this->config->get($this->config_path . 'route');
+        return $this->redirect_route ?: $this->config->get($this->config_path . 'route');
     }
 
     /**
@@ -301,11 +301,11 @@ abstract class Filter
         // cache it, so that we don't have to keep asking for it
         $client_version = $this->client->ua->toVersion();
 
-        foreach ((array)$this->getBrowserVersions() as $operator => $version) {
-            $denied |= (bool)version_compare($client_version, $version, $operator);
+        foreach ((array) $this->getBrowserVersions() as $operator => $version) {
+            $denied |= (bool) version_compare($client_version, $version, $operator);
         }
 
-        return (bool)$denied;
+        return (bool) $denied;
     }
 
     /**

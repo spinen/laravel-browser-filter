@@ -1,63 +1,62 @@
 {
-    "name": "spinen/laravel-browser-filter",
-    "description": "Filters http requests based on browser type.",
-    "keywords": [
-        "browser hawk",
-        "laravel",
-        "middleware",
-        "spinen"
+  "name": "spinen/laravel-browser-filter",
+  "description": "Filters http requests based on browser type.",
+  "keywords": [
+    "browser hawk",
+    "laravel",
+    "middleware",
+    "spinen"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jimmy Puckett",
+      "email": "jimmy.puckett@spinen.com"
+    },
+    {
+      "name": "Stephen Finney",
+      "email": "stephen.finney@spinen.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0.2",
+    "ext-json": "*",
+    "illuminate/cache": "^9.19",
+    "illuminate/routing": "^9.19",
+    "illuminate/support": "^9.19",
+    "mobiledetect/mobiledetectlib": "~2.8",
+    "ua-parser/uap-php": "~3.9"
+  },
+  "require-dev": {
+    "illuminate/http": "^9.19",
+    "mockery/mockery": "^1.5.1",
+    "phpunit/phpunit": "^9.5.26",
+    "psy/psysh": "^0.11",
+    "symfony/var-dumper": "^6.2"
+  },
+  "autoload": {
+    "files": [
+      "src/Support/helper.php"
     ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Jimmy Puckett",
-            "email": "jimmy.puckett@spinen.com"
-        },
-        {
-            "name": "Stephen Finney",
-            "email": "stephen.finney@spinen.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.2",
-        "ext-json": "*",
-        "illuminate/cache": "~5.5|~6|~7|~8",
-        "illuminate/routing": "~5.5|~6|~7|~8",
-        "illuminate/support": "~5.5|~6|~7|~8",
-        "mobiledetect/mobiledetectlib": "~2.8",
-        "ua-parser/uap-php": "~3.9"
-    },
-    "require-dev": {
-        "illuminate/http": "~5.5|~6|~7",
-        "mockery/mockery": "^1.3.1",
-        "phpunit/phpunit": "^8.4|^9.0",
-        "psy/psysh": "^0.10",
-        "symfony/thanks": "^1.1",
-        "symfony/var-dumper": "~3.0|^4.2"
-    },
-    "autoload": {
-        "files": [
-            "src/Support/helper.php"
-        ],
-        "psr-4": {
-            "Spinen\\BrowserFilter\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Spinen\\BrowserFilter\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Spinen\\BrowserFilter\\FilterServiceProvider"
-            ]
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "psr-4": {
+      "Spinen\\BrowserFilter\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spinen\\BrowserFilter\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Spinen\\BrowserFilter\\FilterServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

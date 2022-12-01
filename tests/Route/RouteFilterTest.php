@@ -7,13 +7,11 @@ use Spinen\BrowserFilter\Stubs\RouteFilterStub as Filter;
 
 /**
  * Class RouteFilterTest
- *
- * @package Spinen\BrowserFilter\Route
  */
 class RouteFilterTest extends FilterCase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createFilter()
     {
@@ -52,7 +50,7 @@ class RouteFilterTest extends FilterCase
                            ->andReturn($path);
 
         $this->assertEquals(
-            'Device:Browser:1.2.3:allow:' . md5($path),
+            'Device:Browser:1.2.3:allow:'.md5($path),
             $this->filter->generateCacheKey($this->request_mock)
         );
     }
@@ -74,7 +72,7 @@ class RouteFilterTest extends FilterCase
     {
         $filter_string = 'First;Second/Third;Fourth/Fifth/6';
         $rules = [
-            'First'  => '*',
+            'First' => '*',
             'Second' => [
                 'Third' => '*',
             ],
@@ -85,7 +83,9 @@ class RouteFilterTest extends FilterCase
             ],
         ];
 
-        $cache_key = 'filter_string:' . md5($filter_string);
+        $cache_key = 'filter_string:'.md5($filter_string);
+
+        $timeout = random_int(1, 100);
 
         $this->cache_mock->shouldReceive('get')
                          ->once()
@@ -98,7 +98,7 @@ class RouteFilterTest extends FilterCase
                              [
                                  $cache_key,
                                  $rules,
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturn([]);
@@ -106,7 +106,7 @@ class RouteFilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->filter->parseFilterString($filter_string);
 
@@ -120,7 +120,7 @@ class RouteFilterTest extends FilterCase
     {
         $filter_string = 'First/;Second/Third/;Fourth/Fifth/6|;';
         $rules = [
-            'First'  => '*',
+            'First' => '*',
             'Second' => [
                 'Third' => '*',
             ],
@@ -131,12 +131,14 @@ class RouteFilterTest extends FilterCase
             ],
         ];
 
-        $cache_key = 'filter_string:' . md5($filter_string);
+        $cache_key = 'filter_string:'.md5($filter_string);
 
         $this->cache_mock->shouldReceive('get')
                          ->once()
                          ->withArgs([$cache_key, []])
                          ->andReturn([]);
+
+        $timeout = random_int(1, 100);
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
@@ -144,7 +146,7 @@ class RouteFilterTest extends FilterCase
                              [
                                  $cache_key,
                                  $rules,
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturn([]);
@@ -152,7 +154,7 @@ class RouteFilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->filter->parseFilterString($filter_string);
 
@@ -169,18 +171,20 @@ class RouteFilterTest extends FilterCase
             'First' => [
                 'Second' => [
                     '<=' => '3',
-                    '>'  => '4',
+                    '>' => '4',
                 ],
-                'Fifth'  => '*',
+                'Fifth' => '*',
             ],
         ];
 
-        $cache_key = 'filter_string:' . md5($filter_string);
+        $cache_key = 'filter_string:'.md5($filter_string);
 
         $this->cache_mock->shouldReceive('get')
                          ->once()
                          ->withArgs([$cache_key, []])
                          ->andReturn([]);
+
+        $timeout = random_int(1, 100);
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
@@ -188,7 +192,7 @@ class RouteFilterTest extends FilterCase
                              [
                                  $cache_key,
                                  $rules,
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturn([]);
@@ -196,7 +200,7 @@ class RouteFilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->filter->parseFilterString($filter_string);
 
@@ -216,12 +220,14 @@ class RouteFilterTest extends FilterCase
             'Third' => '*',
         ];
 
-        $cache_key = 'filter_string:' . md5($filter_string);
+        $cache_key = 'filter_string:'.md5($filter_string);
 
         $this->cache_mock->shouldReceive('get')
                          ->once()
                          ->withArgs([$cache_key, []])
                          ->andReturn([]);
+
+        $timeout = random_int(1, 100);
 
         $this->cache_mock->shouldReceive('put')
                          ->once()
@@ -229,7 +235,7 @@ class RouteFilterTest extends FilterCase
                              [
                                  $cache_key,
                                  $rules,
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturn([]);
@@ -237,7 +243,7 @@ class RouteFilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->filter->parseFilterString($filter_string);
 
@@ -256,7 +262,7 @@ class RouteFilterTest extends FilterCase
             ],
         ];
 
-        $cache_key = 'filter_string:' . md5($filter_string);
+        $cache_key = 'filter_string:'.md5($filter_string);
 
         $this->cache_mock->shouldReceive('get')
                          ->once()
@@ -269,7 +275,7 @@ class RouteFilterTest extends FilterCase
                              [
                                  $cache_key,
                                  $rules,
-                                 'x',
+                                 random_int(1, 100),
                              ]
                          );
 

@@ -7,13 +7,11 @@ use Spinen\BrowserFilter\FilterCase;
 
 /**
  * Class FilterTest
- *
- * @package Spinen\BrowserFilter\Stack
  */
 class FilterTest extends FilterCase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createFilter()
     {
@@ -48,7 +46,7 @@ class FilterTest extends FilterCase
                           ->andReturn([]);
 
         $this->assertEquals(
-            md5(json_encode([])) . ':Device:Browser:1.2.3',
+            md5(json_encode([])).':Device:Browser:1.2.3',
             $this->filter->generateCacheKey($this->request_mock)
         );
     }

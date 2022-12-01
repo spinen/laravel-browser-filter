@@ -7,8 +7,6 @@ use UAParser\Result\Client;
 
 /**
  * Class ParserCreatorTest
- *
- * @package Spinen\BrowserFilter\Support
  */
 class ParserCreatorTest extends TestCase
 {
@@ -45,6 +43,6 @@ class ParserCreatorTest extends TestCase
      */
     public function it_will_parse_a_null_agent_string()
     {
-        $this->assertInstanceOf(Client::class, $this->parser->parseAgent(null));
+        $this->assertInstanceOf(Client::class, $this->parser->parseAgent(''));
     }
 }

@@ -17,8 +17,6 @@ use UAParser\Result\UserAgent;
 
 /**
  * Class FilterCase
- *
- * @package Spinen\BrowserFilter
  */
 abstract class FilterCase extends TestCase
 {

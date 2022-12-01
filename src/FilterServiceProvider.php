@@ -6,8 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class FilterServiceProvider
- *
- * @package Spinen\BrowserFilter
  */
 class FilterServiceProvider extends ServiceProvider
 {
@@ -22,7 +20,7 @@ class FilterServiceProvider extends ServiceProvider
     {
         parent::__construct($app);
 
-        $this->config_file = realpath(__DIR__ . '/config/browserfilter.php');
+        $this->config_file = realpath(__DIR__.'/config/browserfilter.php');
     }
 
     /**
@@ -35,7 +33,7 @@ class FilterServiceProvider extends ServiceProvider
         // Publish configuration file
         $this->publishes(
             [
-                $this->config_file => $this->app['path.config'] . DIRECTORY_SEPARATOR . 'browserfilter.php',
+                $this->config_file => $this->app['path.config'].DIRECTORY_SEPARATOR.'browserfilter.php',
             ]
         );
     }

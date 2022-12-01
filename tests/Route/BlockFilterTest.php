@@ -7,13 +7,11 @@ use Spinen\BrowserFilter\Route\BlockFilter as Filter;
 
 /**
  * Class FilterTest
- *
- * @package Spinen\BrowserFilter\Route
  */
 class BlockFilterTest extends FilterCase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createFilter()
     {

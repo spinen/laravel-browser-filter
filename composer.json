@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "php": "^8.0.2",
+    "php": ">=8.0.2",
     "ext-json": "*",
     "illuminate/cache": "^9.19",
     "illuminate/routing": "^9.19",

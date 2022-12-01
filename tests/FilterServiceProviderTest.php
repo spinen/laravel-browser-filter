@@ -9,8 +9,6 @@ use Mockery;
 
 /**
  * Class FilterServiceProviderTest
- *
- * @package Spinen\BrowserFilter
  */
 class FilterServiceProviderTest extends TestCase
 {
@@ -55,7 +53,7 @@ class FilterServiceProviderTest extends TestCase
         //                        ->andReturnTrue();
 
         $this->application_mock = [
-            'config'      => $this->config_mock,
+            'config' => $this->config_mock,
             'path.config' => '/some/path',
         ];
     }

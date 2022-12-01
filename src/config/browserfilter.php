@@ -15,7 +15,7 @@ return [
     | "allow" specifies that you want to *allow* browsers that match a rule
     |
     */
-    'type'    => 'block',
+    'type' => 'block',
 
     /*
     |--------------------------------------------------------------------------
@@ -61,9 +61,9 @@ return [
     |     * Any version of Opera less than 6 on a tablet
     |
     */
-    'rules'   => [
+    'rules' => [
         'Mobile' => [],
-        'Other'  => [],
+        'Other' => [],
         'Tablet' => [],
     ],
 
@@ -75,7 +75,7 @@ return [
     | The name of the route to redirect the user to if the browser is blocked
     |
     */
-    'route'   => 'incompatible_browser',
+    'route' => 'incompatible_browser',
 
     /*
     |--------------------------------------------------------------------------

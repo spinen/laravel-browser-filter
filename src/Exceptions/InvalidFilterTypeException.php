@@ -6,8 +6,6 @@ use Exception;
 
 /**
  * Class InvalidFilterTypeException
- *
- * @package Spinen\BrowserFilter\Exceptions
  */
 class InvalidFilterTypeException extends Exception
 {

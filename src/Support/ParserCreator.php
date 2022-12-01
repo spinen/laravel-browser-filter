@@ -3,11 +3,10 @@
 namespace Spinen\BrowserFilter\Support;
 
 use UAParser\Parser;
+use UAParser\Result\Client;
 
 /**
  * Class ParserCreator
- *
- * @package Spinen\BrowserFilter\Support
  */
 class ParserCreator
 {
@@ -29,12 +28,8 @@ class ParserCreator
 
     /**
      * Parse the user agent string.
-     *
-     * @param string $agent Agent string
-     *
-     * @return \UAParser\Result\Client
      */
-    public function parseAgent($agent)
+    public function parseAgent(string $agent): Client
     {
         return $this->parser->parse((string) $agent);
     }

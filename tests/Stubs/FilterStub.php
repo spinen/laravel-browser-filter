@@ -6,23 +6,21 @@ use Spinen\BrowserFilter\Filter;
 
 /**
  * Class FilterStub
- *
- * @package Spinen\BrowserFilter\Stubs
  */
 class FilterStub extends Filter
 {
     use TestSetters;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function parseFilterString($filter_string)
+    public function parseFilterString(string|array|null $filter_string): void
     {
         if (is_array($filter_string)) {
             $this->rules = $filter_string;
 
             return;
         }
-        $this->rules = array_filter(explode(',', $filter_string));
+        $this->rules = array_filter(explode(',', (string) $filter_string));
     }
 }

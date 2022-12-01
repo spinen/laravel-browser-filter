@@ -23,12 +23,13 @@
     "ext-json": "*",
     "illuminate/cache": "^9.19",
     "illuminate/routing": "^9.19",
-    "illuminate/support": "^9.19",
+    "illuminate/support": "^9.42",
     "mobiledetect/mobiledetectlib": "~2.8",
     "ua-parser/uap-php": "~3.9"
   },
   "require-dev": {
     "illuminate/http": "^9.19",
+    "laravel/pint": "^1.2",
     "mockery/mockery": "^1.5.1",
     "phpunit/phpunit": "^9.5.26",
     "psy/psysh": "^0.11",

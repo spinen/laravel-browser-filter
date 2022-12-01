@@ -10,13 +10,11 @@ use Spinen\BrowserFilter\Stubs\FilterStub as Filter;
 
 /**
  * Class FilterTest
- *
- * @package Spinen\BrowserFilter
  */
 class FilterTest extends FilterCase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createFilter()
     {
@@ -98,9 +96,9 @@ class FilterTest extends FilterCase
             'Device' => [
                 'Browser' => [
                     '<=' => '3',
-                    '>'  => '4',
+                    '>' => '4',
                 ],
-                'Other'   => '*',
+                'Other' => '*',
             ],
         ];
 
@@ -129,9 +127,9 @@ class FilterTest extends FilterCase
             'Device' => [
                 'Browser' => [
                     '<=' => '3',
-                    '>'  => '4',
+                    '>' => '4',
                 ],
-                'Other'   => '*',
+                'Other' => '*',
             ],
         ];
 
@@ -159,12 +157,14 @@ class FilterTest extends FilterCase
      */
     public function it_gets_the_cache_timeout_from_the_proper_key_in_the_config()
     {
+        $timeout = random_int(1, 100);
+
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
-        $this->assertEquals('x', $this->filter->getCacheTimeout());
+        $this->assertEquals($timeout, $this->filter->getCacheTimeout());
     }
 
     /**
@@ -253,6 +253,8 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_result_from_the_next_filter_when_client_is_not_blocked_and_caches_the_result()
     {
+        $timeout = random_int(1, 100);
+
         $this->filter->setFilterAsBlockFilter();
 
         $this->client_device_mock->family = 'Device';
@@ -269,7 +271,7 @@ class FilterTest extends FilterCase
                              [
                                  'Device:Browser:1.2.3',
                                  false,
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturnNull();
@@ -286,7 +288,7 @@ class FilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->session_mock->shouldReceive('get')
                            ->once()
@@ -349,6 +351,8 @@ class FilterTest extends FilterCase
      */
     public function it_returns_the_redirect_from_the_filter_when_client_is_blocked_and_caches_the_result()
     {
+        $timeout = random_int(1, 100);
+
         $this->filter->setFilterAsAllowFilter();
 
         $this->client_device_mock->family = 'Device';
@@ -365,7 +369,7 @@ class FilterTest extends FilterCase
                              [
                                  'Device:Browser:1.2.3',
                                  'route',
-                                 'x',
+                                 $timeout,
                              ]
                          )
                          ->andReturnNull();
@@ -383,7 +387,7 @@ class FilterTest extends FilterCase
         $this->config_mock->shouldReceive('get')
                           ->once()
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->redirector_mock->shouldReceive('route')
                               ->once()
@@ -466,6 +470,8 @@ class FilterTest extends FilterCase
      */
     public function it_parses_the_third_parameter_and_causes_the_rules_to_be_set()
     {
+        $timeout = random_int(1, 100);
+
         $this->filter->setFilterAsBlockFilter();
 
         $this->client_device_mock->family = 'Device';
@@ -489,7 +495,7 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn($timeout);
 
         $this->session_mock->shouldReceive('get')
                            ->withArgs(['redirected', false])
@@ -534,7 +540,7 @@ class FilterTest extends FilterCase
 
         $this->config_mock->shouldReceive('get')
                           ->with('browserfilter.timeout')
-                          ->andReturn('x');
+                          ->andReturn(random_int(1, 100));
 
         $this->redirector_mock->shouldReceive('route')
                               ->once()
@@ -847,7 +853,6 @@ class FilterTest extends FilterCase
      */
     public function it_matches_when_browser_version_is_equal_to_defined_greater_equal_rule()
     {
-
         $this->client_device_mock->family = 'Device';
         $this->client_ua_mock->family = 'Browser';
 
@@ -1373,26 +1378,6 @@ class FilterTest extends FilterCase
             'Device' => [
                 'Browser' => [
                     '~' => '2',
-                ],
-            ],
-        ];
-
-        $this->filter->setRulesForTest($rules);
-
-        $this->filter->validateRules();
-    }
-
-    /**
-     * @test
-     */
-    public function it_raises_exception_when_versions_are_not_a_string()
-    {
-        $this->expectException(InvalidRuleDefinitionsException::class);
-
-        $rules = [
-            'Device' => [
-                'Browser' => [
-                    '=' => 2,
                 ],
             ],
         ];

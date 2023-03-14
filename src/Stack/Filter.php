@@ -14,7 +14,7 @@ class Filter extends CoreFilter
     /**
      * {@inheritDoc}
      */
-    protected $block_filter = true;
+    protected ?bool $block_filter = true;
 
     /**
      * {@inheritDoc}

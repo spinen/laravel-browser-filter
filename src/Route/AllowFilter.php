@@ -10,5 +10,5 @@ class AllowFilter extends RouteFilter
     /**
      * {@inheritDoc}
      */
-    protected $block_filter = false;
+    protected ?bool $block_filter = false;
 }

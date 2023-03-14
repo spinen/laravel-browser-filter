@@ -19,19 +19,19 @@
     }
   ],
   "require": {
-    "php": ">=8.0.2",
+    "php": ">=8.1",
     "ext-json": "*",
-    "illuminate/cache": "^9.19",
-    "illuminate/routing": "^9.19",
-    "illuminate/support": "^9.42",
+    "illuminate/cache": "^9.19|^10",
+    "illuminate/routing": "^9.19|^10",
+    "illuminate/support": "^9.42|^10",
     "mobiledetect/mobiledetectlib": "~2.8",
     "ua-parser/uap-php": "~3.9"
   },
   "require-dev": {
-    "illuminate/http": "^9.19",
+    "illuminate/http": "^9.19|^10",
     "laravel/pint": "^1.2",
     "mockery/mockery": "^1.5.1",
-    "phpunit/phpunit": "^9.5.26",
+    "phpunit/phpunit": "^9.6.5",
     "psy/psysh": "^0.11",
     "symfony/var-dumper": "^6.2"
   },

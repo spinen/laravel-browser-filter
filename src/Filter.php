@@ -20,38 +20,28 @@ abstract class Filter
 {
     /**
      * Is this a block or allow filter?
-     *
-     * @var bool
      */
-    protected $block_filter = null;
+    protected ?bool $block_filter = null;
 
     /**
      * The client instance.
-     *
-     * @var Client
      */
-    protected $client;
+    protected Client $client;
 
     /**
      * Location of the config file.
-     *
-     * @var string
      */
-    protected $config_path = 'browserfilter.';
+    protected string $config_path = 'browserfilter.';
 
     /**
      * The path to redirect the user if client is blocked.
-     *
-     * @var string
      */
-    protected $redirect_route;
+    protected ?string $redirect_route = null;
 
     /**
      * The array of rules
-     *
-     * @var array
      */
-    protected $rules = [];
+    protected array $rules = [];
 
     /**
      * Create a new browser filter middleware instance.

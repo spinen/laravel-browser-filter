@@ -11,10 +11,8 @@ class FilterServiceProvider extends ServiceProvider
 {
     /**
      * Location of the configuration file in the package
-     *
-     * @var string
      */
-    protected $config_file;
+    protected string $config_file;
 
     public function __construct($app)
     {

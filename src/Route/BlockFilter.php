@@ -10,5 +10,5 @@ class BlockFilter extends RouteFilter
     /**
      * {@inheritDoc}
      */
-    protected $block_filter = true;
+    protected ?bool $block_filter = true;
 }
